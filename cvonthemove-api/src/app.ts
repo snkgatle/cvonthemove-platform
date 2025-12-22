@@ -1,0 +1,22 @@
+import express from 'express';
+import path from 'path';
+import cookieParser from 'cookie-parser';
+import logger from 'morgan';
+
+import indexRouter from './routes/index';
+import usersRouter from './routes/users';
+import cvRouter from './routes/cv';
+
+const app = express();
+
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+// Removed express.static and view engine setup for Pure REST API
+
+app.use('/', indexRouter);
+app.use('/users', usersRouter);
+app.use('/cv', cvRouter);
+
+export default app;
