@@ -45,8 +45,12 @@ COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 # Copy built application from builder
 COPY --from=builder /app/dist ./dist
 
+# Copy startup script
+COPY start.sh .
+RUN chmod +x start.sh
+
 # Expose port (Cloud Run defaults to 8080)
 EXPOSE 8080
 
 # Start command
-CMD ["npm", "start"]
+CMD ["./start.sh"]
