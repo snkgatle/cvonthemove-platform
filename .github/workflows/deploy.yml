@@ -50,7 +50,6 @@ jobs:
           region: ${{ env.REGION }}
           image: gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE_NAME }}:${{ github.sha }}
           flags: '--service-account=${{ env.SERVICE_ACCOUNT_EMAIL }} --allow-unauthenticated'
-          # NOTE: You should set these secrets in GitHub Repo Settings
           env_vars: |
              NODE_ENV=production
           secrets: |
