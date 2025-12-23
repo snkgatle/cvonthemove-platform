@@ -9,6 +9,7 @@ env:
   PROJECT_ID: ${{ secrets.PROJECT_ID }}
   REGION: us-central1 # TODO: Change to your region
   SERVICE_NAME: cvonthemove-api
+  SERVICE_ACCOUNT_EMAIL: kempire-cv-api@cvonthemove-52aec.iam.gserviceaccount.com
 
 jobs:
   deploy:
@@ -48,6 +49,7 @@ jobs:
           service: ${{ env.SERVICE_NAME }}
           region: ${{ env.REGION }}
           image: gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE_NAME }}:${{ github.sha }}
+          flags: '--service-account=${{ env.SERVICE_ACCOUNT_EMAIL }}'
           # NOTE: You should set these secrets in GitHub Repo Settings
           env_vars: |
              NODE_ENV=production
