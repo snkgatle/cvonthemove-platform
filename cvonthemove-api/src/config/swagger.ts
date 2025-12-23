@@ -23,7 +23,10 @@ const options: swaggerJsdoc.Options = {
             },
         ],
     },
-    apis: ['./src/features/cv-builder/routes/*.ts', './src/features/auth/routes/*.ts', './src/app.ts'], // Files containing annotations
+},
+    apis: process.env.NODE_ENV === 'production'
+        ? ['./dist/features/**/routes/*.js', './dist/app.js']
+        : ['./src/features/**/routes/*.ts', './src/app.ts'], 
 };
 
 const swaggerSpec = swaggerJsdoc(options);
