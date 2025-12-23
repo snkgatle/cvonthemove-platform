@@ -1,0 +1,46 @@
+import { Request, Response } from 'express';
+import { CVBuilderService } from '../services/CVBuilderService';
+// import { CreateCVSchema } from '../schemas/cvSchemas'; // If manual validation is needed, but we'll use middleware
+
+export class CVBuilderController {
+
+    static async getCV(req: Request, res: Response) {
+        try {
+            const { cvId } = req.params;
+            if (!cvId) return res.status(400).json({ error: 'cvId is required' });
+
+            const cv = await CVBuilderService.getFullCV(cvId);
+            if (!cv) return res.status(404).json({ error: 'CV not found' });
+
+            // Transform to expected format if necessary, or return as is
+            // Requirement: "get data... and present it in the following format"
+            // The service returns the relations, which matches the requirement structure closely.
+            const response = {
+                personalDetails: cv.personalDetails || {},
+                addresses: cv.addresses,
+                education: cv.educations,
+                workExperience: cv.workExperiences,
+                skills: cv.skills,
+                references: cv.references,
+                createdAt: cv.createdAt,
+                updatedAt: cv.updatedAt,
+                id: cv.id // include ID usually
+            };
+
+            res.json(response);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    }
+
+    static async createCV(req: Request, res: Response) {
+        try {
+            const cv = await CVBuilderService.createCV(req.body);
+            res.status(201).json(cv);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    }
+}
