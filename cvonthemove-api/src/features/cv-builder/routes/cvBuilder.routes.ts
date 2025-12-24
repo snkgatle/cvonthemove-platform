@@ -18,8 +18,39 @@ import { EducationController } from '../controllers/EducationController';
 import { WorkExperienceController } from '../controllers/WorkExperienceController';
 import { SkillController } from '../controllers/SkillController';
 import { ReferenceController } from '../controllers/ReferenceController';
+import { generatePdfController } from '../controllers/pdf.controller';
 
 const router = express.Router();
+
+/**
+ * @openapi
+ * /generate-pdf:
+ *   post:
+ *     summary: Generate PDF of CV
+ *     tags: [CV Builder]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [templateId, data]
+ *             properties:
+ *               templateId:
+ *                 type: string
+ *                 enum: [classic, modern, minimalist, creative, professional]
+ *               data:
+ *                 type: object
+ *     responses:
+ *       200:
+ *         description: PDF file
+ *         content:
+ *           application/pdf:
+ *             schema:
+ *               type: string
+ *               format: binary
+ */
+router.post('/generate-pdf', generatePdfController);
 
 /**
  * @openapi
