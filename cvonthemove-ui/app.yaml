@@ -1,4 +1,6 @@
 runtime: nodejs20
+instance_class: F1
+
 
 handlers:
   # Serve static assets
