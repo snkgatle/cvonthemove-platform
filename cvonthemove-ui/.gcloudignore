@@ -1,0 +1,13 @@
+# Exclude node_modules (dependencies are installed on the server if needed, but for static serving we just need 'dist')
+node_modules/
+
+# Included build directory (IMPORTANT)
+!dist/
+
+# Git related
+.git
+.gitignore
+
+# IDE files
+.vscode/
+.idea/
