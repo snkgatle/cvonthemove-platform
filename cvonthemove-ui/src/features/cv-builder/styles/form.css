@@ -1,0 +1,167 @@
+.cv-builder-form {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    color: #e2e8f0;
+    background: #1e293b;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.form-header {
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #334155;
+    padding-bottom: 1rem;
+}
+
+.form-section {
+    margin-bottom: 2.5rem;
+    padding: 1.5rem;
+    background: #0f172a;
+    border-radius: 6px;
+    border: 1px solid #334155;
+}
+
+.form-section h3 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    color: #38bdf8;
+    border-bottom: 1px solid #1e293b;
+    padding-bottom: 0.5rem;
+}
+
+.grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #94a3b8;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    padding: 0.5rem 0.75rem;
+    background: #1e293b;
+    border: 1px solid #475569;
+    border-radius: 4px;
+    color: white;
+    font-size: 0.875rem;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #38bdf8;
+    ring: 1px solid #38bdf8;
+}
+
+.error {
+    color: #f87171;
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+}
+
+.array-item-card {
+    background: #1e293b; /* Slightly lighter than section bg */
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 4px;
+    border: 1px solid #334155;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.card-header h4 {
+    margin: 0;
+    font-size: 1rem;
+    color: #e2e8f0;
+}
+
+.array-item-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start; /* Aligns items to top if validation error expands height */
+    margin-bottom: 0.5rem;
+}
+
+.btn-primary, .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: background 0.2s;
+}
+
+.btn-primary {
+    background: #38bdf8;
+    color: #0f172a;
+}
+.btn-primary:hover {
+    background: #0ea5e9;
+}
+
+.btn-secondary {
+    background: #334155;
+    color: #e2e8f0;
+    font-size: 0.875rem;
+}
+.btn-secondary:hover {
+    background: #475569;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    color: #94a3b8;
+}
+.icon-btn:hover {
+    background: #334155;
+    color: white;
+}
+.icon-btn.danger:hover {
+    color: #f87171;
+    background: rgba(248, 113, 113, 0.1);
+}
+
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+.checkbox-group input {
+    width: auto;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #334155;
+}
