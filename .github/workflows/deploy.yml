@@ -93,7 +93,7 @@ jobs:
         uses: google-github-actions/deploy-appengine@v2
         with:
           working_directory: cvonthemove-ui
-          project_id: ${{ vars.PROJECT_ID }} # Using vars or env if secrets not available directly in with
+          project_id: ${{ env.PROJECT_ID }} # Fix: Use env.PROJECT_ID defined at top
           # If PROJECT_ID is a secret, referencing env.PROJECT_ID from a previous step setup or secrets directly
           
       - name: Show App Engine URL
