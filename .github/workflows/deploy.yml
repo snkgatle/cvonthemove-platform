@@ -81,6 +81,10 @@ jobs:
           cd cvonthemove-ui
           npm install
           npm run build
+          echo "Listing all files in cvonthemove-ui:"
+          ls -la
+          echo "Listing dist directory:"
+          ls -R dist
 
       - name: Google Auth
         id: auth
