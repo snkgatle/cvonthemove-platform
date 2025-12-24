@@ -1,0 +1,8 @@
+# Ignore everything by default
+*
+
+# Allow app.yaml to be uploaded
+!app.yaml
+
+# Allow the build output directory (dist) to be uploaded
+!dist/**

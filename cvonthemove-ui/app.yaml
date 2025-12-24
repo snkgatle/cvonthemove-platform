@@ -1,0 +1,19 @@
+runtime: python311
+
+handlers:
+  # Serve all static files in the assets directory
+  - url: /assets
+    static_dir: dist/assets
+
+  # Serve any other file that exists in the dist directory
+  # This handles files like vite.svg, favicon.ico, robots.txt, etc.
+  - url: /(.*\..+)$
+    static_files: dist/\1
+    upload: dist/(.*\..+)$
+    require_matching_file: true
+
+  # Catch-all handler for Single Page Application routing
+  # Serves index.html for any request that doesn't match a static file
+  - url: /.*
+    static_files: dist/index.html
+    upload: dist/index.html
