@@ -1,0 +1,11 @@
+runtime: nodejs20
+
+handlers:
+  # Serve static assets
+  - url: /assets
+    static_dir: dist/assets
+
+  # Catch-all for SPA: serve index.html
+  - url: .*
+    static_files: dist/index.html
+    upload: dist/index.html
