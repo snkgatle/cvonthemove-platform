@@ -1,83 +1,91 @@
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { CVBuilderForm } from './CVBuilderForm';
 import { type CreateCVInput } from '../types';
+import { cvService } from '../services/cvService';
 import '../styles/form.css';
 
-// Mock data for editing
-const MOCK_DATA: CreateCVInput = {
-    personalDetails: {
-        fullName: "Jane Doe",
-        email: "jane.doe@example.com",
-        phone: "+1 555 0199",
-        location: "New York, USA",
-        summary: "Experienced software engineer with a passion for frontend development.",
-        linkedinUrl: "https://linkedin.com/in/janedoe",
-        languages: ["English", "Spanish"],
-        maritalStatus: "Single"
-    },
-    addresses: [
-        {
-            line1: "123 Main St",
-            city: "New York",
-            postalCode: "10001",
-            country: "USA"
-        }
-    ],
-    educations: [
-        {
-            institution: "Tech University",
-            degree: "Bachelor of Science",
-            fieldOfStudy: "Computer Science",
-            startDate: "2015-09-01",
-            endDate: "2019-05-30",
-            current: false
-        }
-    ],
-    workExperiences: [
-        {
-            company: "Tech Corp",
-            position: "Frontend Developer",
-            description: "Built amazing UIs with React.",
-            startDate: "2019-06-01",
-            current: true
-        }
-    ],
-    skills: [
-        { name: "React", level: "Expert" },
-        { name: "TypeScript", level: "Advanced" }
-    ],
-    references: []
-};
-
 export const CreateCVPage = () => {
+    const navigate = useNavigate();
+
     const handleSubmit = async (data: CreateCVInput) => {
-        console.log("Submitting Create CV:", data);
-        // Here you would typically make the API call to POST /cv-builder
-        // await api.post('/cv-builder', data);
-        alert("CV Data prepared for submission (Check Console)");
+        try {
+            console.log("Submitting Create CV:", data);
+            await cvService.createCV(data);
+            alert("CV Created Successfully!");
+            navigate('/'); // Redirect to home or list
+        } catch (error) {
+            console.error("Failed to create CV", error);
+            alert("Failed to create CV. Please try again.");
+        }
     };
 
     return (
-        <div style={{ padding: '2rem', background: '#0f172a', minHeight: '100vh' }}>
-             <h1 style={{ textAlign: 'center', color: 'white', marginBottom: '2rem' }}>Create New CV</h1>
+        <div className="p-8 bg-slate-900 min-h-screen">
+             <h1 className="text-center text-white mb-8 text-3xl font-bold">Create New CV</h1>
             <CVBuilderForm onSubmit={handleSubmit} />
         </div>
     );
 };
 
 export const EditCVPage = () => {
+    const { id } = useParams<{ id: string }>();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const [initialData, setInitialData] = useState<CreateCVInput | undefined>(undefined);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        // Auth check
+        const token = localStorage.getItem('token');
+        if (!token) {
+            navigate('/login', { state: { from: location } });
+            return;
+        }
+
+        const fetchCV = async () => {
+            if (!id) return;
+            try {
+                const data = await cvService.getCV(id);
+                setInitialData(data);
+            } catch (error) {
+                console.error("Failed to fetch CV", error);
+                alert("Failed to load CV.");
+                navigate('/');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchCV();
+    }, [id, navigate, location]);
+
     const handleSubmit = async (data: CreateCVInput) => {
-        console.log("Submitting Update CV:", data);
-        // Here you would typically make the API call to POST /cv-builder or PUT /cv-builder/:id
-        alert("CV Data Updated (Check Console)");
+        if (!id) return;
+        try {
+            console.log("Submitting Update CV:", data);
+            await cvService.updateCV(id, data);
+            alert("CV Updated Successfully!");
+            navigate('/');
+        } catch (error) {
+            console.error("Failed to update CV", error);
+            alert("Failed to update CV. Please try again.");
+        }
     };
 
+    if (loading) {
+        return <div className="text-white text-center mt-8">Loading...</div>;
+    }
+
     return (
-        <div style={{ padding: '2rem', background: '#0f172a', minHeight: '100vh' }}>
-            <h1 style={{ textAlign: 'center', color: 'white', marginBottom: '2rem' }}>Edit CV</h1>
-            <CVBuilderForm
-                initialData={MOCK_DATA}
-                onSubmit={handleSubmit}
-            />
+        <div className="p-8 bg-slate-900 min-h-screen">
+            <h1 className="text-center text-white mb-8 text-3xl font-bold">Edit CV</h1>
+            {initialData && (
+                <CVBuilderForm
+                    initialData={initialData}
+                    onSubmit={handleSubmit}
+                />
+            )}
         </div>
     );
 };

@@ -105,6 +105,43 @@ router.post('/cv-builder', validate(CreateCVSchema), CVBuilderController.createC
 
 /**
  * @openapi
+ * /cv-builder/{cvId}:
+ *   put:
+ *     summary: Update full CV
+ *     tags: [CV Builder]
+ *     parameters:
+ *       - in: path
+ *         name: cvId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               personalDetails:
+ *                 type: object
+ *               addresses:
+ *                 type: array
+ *               educations:
+ *                 type: array
+ *               workExperiences:
+ *                 type: array
+ *               skills:
+ *                 type: array
+ *               references:
+ *                 type: array
+ *     responses:
+ *       200:
+ *         description: CV updated successfully
+ */
+router.put('/cv-builder/:cvId', validate(CreateCVSchema), CVBuilderController.updateCV);
+
+/**
+ * @openapi
  * /entity-details:
  *   get:
  *     summary: Get Entity Details

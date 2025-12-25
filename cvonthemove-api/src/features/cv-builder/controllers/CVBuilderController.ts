@@ -43,4 +43,17 @@ export class CVBuilderController {
             res.status(500).json({ error: 'Internal Server Error' });
         }
     }
+
+    static async updateCV(req: Request, res: Response) {
+        try {
+            const { cvId } = req.params;
+            if (!cvId) return res.status(400).json({ error: 'cvId is required' });
+
+            const cv = await CVBuilderService.updateCV(cvId, req.body);
+            res.status(200).json(cv);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    }
 }
