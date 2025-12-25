@@ -63,15 +63,15 @@ export class CVBuilderService {
         return prisma.$transaction(async (tx) => {
             // 1. Update Personal Details (Upsert or Update)
             if (personalDetails) {
-                 // Check if personal details exist, if so update, else create.
-                 // Actually, simpler is to use update on CV with upsert on relation if possible,
-                 // or just delete/create for consistency with others if we don't care about ID preservation of sub-entities.
-                 // For PersonalDetails (1-to-1), upsert is better.
-                 await tx.personalDetails.upsert({
-                     where: { cvId },
-                     create: { ...personalDetails, cvId },
-                     update: personalDetails,
-                 });
+                // Check if personal details exist, if so update, else create.
+                // Actually, simpler is to use update on CV with upsert on relation if possible,
+                // or just delete/create for consistency with others if we don't care about ID preservation of sub-entities.
+                // For PersonalDetails (1-to-1), upsert is better.
+                await tx.entityDetails.upsert({
+                    where: { cvId },
+                    create: { ...personalDetails, cvId },
+                    update: personalDetails,
+                });
             }
 
             // 2. Relations (1-to-Many): Delete all and Re-create
