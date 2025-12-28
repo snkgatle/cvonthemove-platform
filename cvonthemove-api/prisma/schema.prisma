@@ -16,6 +16,8 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   cvs       CV[]
+  passwordResetToken   String?
+  passwordResetExpires DateTime?
 }
 
 model CV {

@@ -36,9 +36,12 @@ export class CVBuilderController {
 
     static async createCV(req: Request, res: Response) {
         try {
+            const userId = req.user?.userId;
+            if (!userId) return res.status(401).json({ error: 'Unauthorized' });
+
             // Validate and transform input
             const parsedData = CreateCVSchema.parse(req.body);
-            const cv = await CVBuilderService.createCV(parsedData);
+            const cv = await CVBuilderService.createCV(parsedData, userId);
             res.status(201).json(cv);
         } catch (error) {
             console.error(error);
