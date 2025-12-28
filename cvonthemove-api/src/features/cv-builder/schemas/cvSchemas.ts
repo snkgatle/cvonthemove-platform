@@ -4,7 +4,7 @@ import { z } from 'zod';
 
 export const EntityDetailsSchema = z.object({
     fullName: z.string().min(1, "Full name is required"),
-    email: z.string().email("Invalid email address"),
+    email: z.email("Invalid email address"),
     phone: z.string().min(1, "Phone number is required"),
     location: z.string().min(1, "Location is required"),
     summary: z.string().min(1, "Summary is required"),
@@ -72,3 +72,4 @@ export type WorkExperienceInput = z.input<typeof WorkExperienceSchema>;
 export type SkillInput = z.input<typeof SkillSchema>;
 export type ReferenceInput = z.input<typeof ReferenceSchema>;
 export type CreateCVInput = z.input<typeof CreateCVSchema>;
+export type CreateCVData = z.infer<typeof CreateCVSchema>;

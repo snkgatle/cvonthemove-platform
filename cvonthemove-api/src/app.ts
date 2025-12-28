@@ -2,6 +2,7 @@ import express from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
+import cors from 'cors';
 
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './config/swagger';
@@ -10,6 +11,7 @@ import authRoutes from './features/auth/routes/auth.routes';
 
 const app = express();
 
+app.use(cors()); // Allow all origins for now (or configure specific origins)
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

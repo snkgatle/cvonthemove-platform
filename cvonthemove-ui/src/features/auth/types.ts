@@ -11,3 +11,7 @@ export interface LoginResponse {
     token: string;
     // Add other fields if returned by the backend (e.g., user details)
 }
+
+export const RegisterSchema = LoginSchema;
+export type RegisterInput = z.infer<typeof RegisterSchema>;
+

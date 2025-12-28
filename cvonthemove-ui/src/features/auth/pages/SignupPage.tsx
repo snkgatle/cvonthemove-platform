@@ -1,34 +1,32 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { authService } from '../services/authService';
-import { LoginSchema, type LoginInput } from '../types';
+import { RegisterSchema, type RegisterInput } from '../types';
 import { Lock, Mail, AlertCircle } from 'lucide-react';
 import logo from '../../../assets/white.svg';
 
-const LoginPage: React.FC = () => {
+const SignupPage: React.FC = () => {
     const navigate = useNavigate();
-    const location = useLocation();
     const [error, setError] = useState<string | null>(null);
-    const from = location.state?.from?.pathname || '/';
 
-    const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginInput>({
-        resolver: zodResolver(LoginSchema),
+    const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<RegisterInput>({
+        resolver: zodResolver(RegisterSchema),
     });
 
-    const onSubmit = async (data: LoginInput) => {
+    const onSubmit = async (data: RegisterInput) => {
         try {
             setError(null);
-            const response = await authService.login(data);
+            const response = await authService.register(data);
             localStorage.setItem('token', response.token);
-            navigate(from, { replace: true });
+            navigate('/create', { replace: true });
         } catch (err: unknown) {
-            console.error('Login failed', err);
+            console.error('Registration failed', err);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const error = err as any;
-            setError(error.response?.data?.message || 'Invalid email or password');
+            setError(error.response?.data?.message || error.response?.data?.error || 'Registration failed. Please try again.');
         }
     };
 
@@ -48,10 +46,10 @@ const LoginPage: React.FC = () => {
                             <img src={logo} alt="CV On The Move" className="h-10 w-auto" />
                         </div>
                         <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400">
-                            Welcome Back
+                            Create Account
                         </h2>
                         <p className="mt-2 text-sm text-slate-400">
-                            Sign in to continue your professional journey
+                            Start building your professional resume today
                         </p>
                     </div>
 
@@ -100,7 +98,7 @@ const LoginPage: React.FC = () => {
                                 <input
                                     id="password"
                                     type="password"
-                                    autoComplete="current-password"
+                                    autoComplete="new-password"
                                     className={`block w-full pl-10 pr-3 py-2.5 bg-white/5 border ${errors.password ? 'border-red-500/50' : 'border-white/10'} rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-colors`}
                                     placeholder="••••••••"
                                     {...register('password')}
@@ -111,14 +109,6 @@ const LoginPage: React.FC = () => {
                             )}
                         </div>
 
-                        <div className="flex items-center justify-between">
-                            <div className="text-sm">
-                                <a href="#" className="font-medium text-blue-400 hover:text-blue-300 transition-colors">
-                                    Forgot password?
-                                </a>
-                            </div>
-                        </div>
-
                         <motion.button
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
@@ -126,17 +116,17 @@ const LoginPage: React.FC = () => {
                             disabled={isSubmitting}
                             className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-emerald-600 hover:from-blue-500 hover:to-emerald-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                         >
-                            {isSubmitting ? 'Signing in...' : 'Sign in'}
+                            {isSubmitting ? 'Creating Account...' : 'Create Account'}
                         </motion.button>
 
                         <div className="text-center mt-4">
                             <p className="text-sm text-slate-400">
-                                Don't have an account?{' '}
+                                Already have an account?{' '}
                                 <span
-                                    onClick={() => navigate('/signup')}
+                                    onClick={() => navigate('/login')}
                                     className="font-medium text-blue-400 hover:text-blue-300 cursor-pointer transition-colors"
                                 >
-                                    Create one now
+                                    Sign in
                                 </span>
                             </p>
                         </div>
@@ -147,4 +137,4 @@ const LoginPage: React.FC = () => {
     );
 };
 
-export default LoginPage;
+export default SignupPage;

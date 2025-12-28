@@ -1,5 +1,5 @@
 import prisma from '../../../lib/prisma';
-import { CreateCVInput } from '../schemas/cvSchemas';
+import { CreateCVInput, CreateCVData } from '../schemas/cvSchemas';
 
 export class CVBuilderService {
     static async getFullCV(cvId: string) {
@@ -16,7 +16,7 @@ export class CVBuilderService {
         });
     }
 
-    static async createCV(data: CreateCVInput) {
+    static async createCV(data: CreateCVData) {
         if (!data) return prisma.cV.create({ data: {} })
 
         const {
@@ -48,7 +48,7 @@ export class CVBuilderService {
         });
     }
 
-    static async updateCV(cvId: string, data: CreateCVInput) {
+    static async updateCV(cvId: string, data: CreateCVData) {
         const {
             personalDetails,
             addresses,

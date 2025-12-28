@@ -1,6 +1,6 @@
+import { CreateCVSchema } from '../schemas/cvSchemas';
 import { Request, Response } from 'express';
 import { CVBuilderService } from '../services/CVBuilderService';
-// import { CreateCVSchema } from '../schemas/cvSchemas'; // If manual validation is needed, but we'll use middleware
 
 export class CVBuilderController {
 
@@ -36,10 +36,16 @@ export class CVBuilderController {
 
     static async createCV(req: Request, res: Response) {
         try {
-            const cv = await CVBuilderService.createCV(req.body);
+            // Validate and transform input
+            const parsedData = CreateCVSchema.parse(req.body);
+            const cv = await CVBuilderService.createCV(parsedData);
             res.status(201).json(cv);
         } catch (error) {
             console.error(error);
+            // Handle Zod or other errors better
+            if ((error as any).name === 'ZodError') {
+                return res.status(400).json({ error: 'Validation Error', details: (error as any).errors });
+            }
             res.status(500).json({ error: 'Internal Server Error' });
         }
     }
@@ -49,10 +55,16 @@ export class CVBuilderController {
             const { cvId } = req.params;
             if (!cvId) return res.status(400).json({ error: 'cvId is required' });
 
-            const cv = await CVBuilderService.updateCV(cvId, req.body);
+            // Validate and transform input
+            const parsedData = CreateCVSchema.parse(req.body);
+
+            const cv = await CVBuilderService.updateCV(cvId, parsedData);
             res.status(200).json(cv);
         } catch (error) {
             console.error(error);
+            if ((error as any).name === 'ZodError') {
+                return res.status(400).json({ error: 'Validation Error', details: (error as any).errors });
+            }
             res.status(500).json({ error: 'Internal Server Error' });
         }
     }
