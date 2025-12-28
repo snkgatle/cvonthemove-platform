@@ -8,15 +8,23 @@ import { EducationForm } from './forms/EducationForm';
 import { WorkExperienceForm } from './forms/WorkExperienceForm';
 import { SkillsForm } from './forms/SkillsForm';
 import { ReferencesForm } from './forms/ReferencesForm';
-import { Save } from 'lucide-react';
+import { Save, type LucideIcon } from 'lucide-react';
 
 interface CVBuilderFormProps {
     initialData?: CreateCVInput;
     onSubmit: (data: CreateCVInput) => void;
     isSubmitting?: boolean;
+    submitLabel?: string;
+    submitIcon?: LucideIcon;
 }
 
-export const CVBuilderForm: React.FC<CVBuilderFormProps> = ({ initialData, onSubmit, isSubmitting = false }) => {
+export const CVBuilderForm: React.FC<CVBuilderFormProps> = ({
+    initialData,
+    onSubmit,
+    isSubmitting = false,
+    submitLabel = 'Save CV',
+    submitIcon: Icon = Save
+}) => {
     // Transform initialData to form structure (wrap languages)
     const formInitialValues: CreateCVFormInput = initialData ? {
         ...initialData,
@@ -78,8 +86,8 @@ export const CVBuilderForm: React.FC<CVBuilderFormProps> = ({ initialData, onSub
 
                 <div className="form-actions">
                     <button type="submit" disabled={isSubmitting} className="btn-primary">
-                        <Save size={18} />
-                        {isSubmitting ? 'Saving...' : 'Save CV'}
+                        <Icon size={18} />
+                        {isSubmitting ? 'Saving...' : submitLabel}
                     </button>
                 </div>
             </form>
