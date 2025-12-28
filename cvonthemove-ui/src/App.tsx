@@ -4,19 +4,22 @@ import LoginPage from './features/auth/pages/LoginPage';
 import SignupPage from './features/auth/pages/SignupPage';
 import './App.css';
 import { CreateCVPage, EditCVPage } from './features/cv-builder/components/Pages';
+import Layout from './components/Layout';
 
 function App() {
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/create" element={<CreateCVPage />} />
-        <Route path="/edit" element={<EditCVPage />} />
-        <Route path="/edit/:id" element={<EditCVPage />} />
-        <Route path="/download" element={<LoginPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignupPage />} />
-      </Routes>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/create" element={<CreateCVPage />} />
+          <Route path="/edit" element={<EditCVPage />} />
+          <Route path="/edit/:id" element={<EditCVPage />} />
+          <Route path="/download" element={<LoginPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+        </Routes>
+      </Layout>
     </Router>
   );
 }
