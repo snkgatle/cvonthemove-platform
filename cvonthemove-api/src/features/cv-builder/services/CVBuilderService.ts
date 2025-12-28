@@ -2,6 +2,20 @@ import prisma from '../../../lib/prisma';
 import { CreateCVInput, CreateCVData } from '../schemas/cvSchemas';
 
 export class CVBuilderService {
+    static async getAllCVs(userId: string) {
+        return prisma.cV.findMany({
+            where: { userId },
+            include: {
+                personalDetails: true,
+                addresses: true,
+                educations: true,
+                workExperiences: true,
+                skills: true,
+                references: true,
+            },
+        });
+    }
+
     static async getFullCV(cvId: string) {
         return prisma.cV.findUnique({
             where: { id: cvId },

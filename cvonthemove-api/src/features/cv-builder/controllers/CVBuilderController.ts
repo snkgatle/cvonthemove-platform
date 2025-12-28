@@ -2,7 +2,26 @@ import { CreateCVSchema } from '../schemas/cvSchemas';
 import { Request, Response } from 'express';
 import { CVBuilderService } from '../services/CVBuilderService';
 
+interface AuthenticatedRequest extends Request {
+    user?: {
+        id: string;
+    }
+}
 export class CVBuilderController {
+    static async getAllCVs(req: AuthenticatedRequest, res: Response) {
+        try {
+            const userId = req.user?.id;
+            if (!userId) {
+                return res.status(401).json({ error: 'Unauthorized' });
+            }
+
+            const cvs = await CVBuilderService.getAllCVs(userId);
+            res.json(cvs);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    }
 
     static async getCV(req: Request, res: Response) {
         try {

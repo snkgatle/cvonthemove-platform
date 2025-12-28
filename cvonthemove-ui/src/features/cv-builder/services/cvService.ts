@@ -7,6 +7,19 @@ export const cvService = {
         return response.data;
     },
 
+    getAllCVs: async () => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            throw new Error("No auth token found");
+        }
+        const response = await api.get('/cv-builder', {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return response.data;
+    },
+
     getCV: async (id: string) => {
         const response = await api.get(`/cv-builder/${id}`);
         // Transform backend response (keys might differ slightly, e.g. education vs educations)

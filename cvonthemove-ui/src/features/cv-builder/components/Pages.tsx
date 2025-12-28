@@ -4,6 +4,7 @@ import { CVBuilderForm } from './CVBuilderForm';
 import { type CreateCVInput } from '../types';
 import { cvService } from '../services/cvService';
 import '../styles/form.css';
+export { DashboardPage } from './DashboardPage';
 
 export const CreateCVPage = () => {
     const navigate = useNavigate();
