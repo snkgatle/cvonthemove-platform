@@ -26,4 +26,26 @@ export class AuthController {
             res.status(500).json({ error: 'Login failed' });
         }
     }
+
+    static async forgotPassword(req: Request, res: Response) {
+        try {
+            await AuthService.forgotPassword(req.body.email);
+            res.status(200).json({ message: 'If a user with that email exists, a password reset link has been sent.' });
+        } catch (error: any) {
+            res.status(500).json({ error: 'An error occurred' });
+        }
+    }
+
+    static async resetPassword(req: Request, res: Response) {
+        try {
+            const { token, newPassword } = req.body;
+            await AuthService.resetPassword(token, newPassword);
+            res.status(200).json({ message: 'Password has been reset successfully.' });
+        } catch (error: any) {
+            if (error.message === 'Token is invalid or has expired') {
+                return res.status(400).json({ error: error.message });
+            }
+            res.status(500).json({ error: 'An error occurred' });
+        }
+    }
 }
