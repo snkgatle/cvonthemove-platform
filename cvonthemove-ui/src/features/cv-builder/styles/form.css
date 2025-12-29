@@ -68,6 +68,15 @@
     ring: 1px solid #38bdf8;
 }
 
+/* Validation error style */
+.form-group input.input-error,
+.form-group textarea.input-error,
+.form-group select.input-error {
+    border-color: #f87171;
+    outline: none;
+    box-shadow: 0 0 0 1px #f87171;
+}
+
 .error {
     color: #f87171;
     font-size: 0.75rem;

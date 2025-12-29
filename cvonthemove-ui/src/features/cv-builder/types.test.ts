@@ -18,6 +18,8 @@ describe('CV Builder Zod Schemas', () => {
         location: 'New York, NY',
         summary: 'Experienced developer',
         languages: ['English', 'Spanish'],
+        idNumber: '1234567890123',
+        maritalStatus: 'Single',
       };
       const result = EntityDetailsSchema.safeParse(validData);
       expect(result.success).toBe(true);
@@ -46,7 +48,9 @@ describe('CV Builder Zod Schemas', () => {
         phone: '1234567890',
         location: 'New York, NY',
         summary: 'Experienced developer',
-        languages: [],
+        languages: ['English'],
+        idNumber: '1234567890123',
+        maritalStatus: 'Single',
       };
       const result = EntityDetailsSchema.safeParse(validData);
       expect(result.success).toBe(true);
