@@ -7,6 +7,7 @@ import { type CreateCVInput } from '../types';
 import { cvService } from '../services/cvService';
 import { ArrowRight, ArrowLeft } from 'lucide-react';
 import '../styles/form.css';
+export { DashboardPage } from './DashboardPage';
 
 const CreateStep = {
     FORM: 1,

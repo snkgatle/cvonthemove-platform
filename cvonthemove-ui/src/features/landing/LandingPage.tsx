@@ -57,7 +57,7 @@ const LandingPage: React.FC = () => {
                         icon={<Edit3 className="w-8 h-8 text-emerald-400" />}
                         title="Edit CV"
                         description="Update your existing CV with new achievements."
-                        onClick={() => navigate('/edit')}
+                        onClick={() => navigate('/dashboard')}
                     />
                     <Card
                         icon={<Download className="w-8 h-8 text-purple-400" />}
