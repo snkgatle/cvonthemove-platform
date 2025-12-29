@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@types/he": "^1.2.3",
+    "@types/nodemailer": "^7.0.4",
     "bcryptjs": "^3.0.3",
     "cookie-parser": "~1.4.4",
     "cors": "^2.8.5",
@@ -22,6 +23,7 @@
     "he": "^1.2.0",
     "jsonwebtoken": "^9.0.3",
     "morgan": "~1.9.1",
+    "nodemailer": "^7.0.12",
     "puppeteer": "24.34.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",

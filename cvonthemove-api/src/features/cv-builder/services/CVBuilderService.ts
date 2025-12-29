@@ -1,5 +1,7 @@
 import prisma from '../../../lib/prisma';
-import { CreateCVInput, CreateCVData } from '../schemas/cvSchemas';
+import { CreateCVData } from '../schemas/cvSchemas';
+import { sendEmail } from '../../../lib/email';
+import { cvDownloadedTemplate } from '../../../templates/cvDownloaded';
 
 export class CVBuilderService {
     static async getAllCVs(userId: string) {
@@ -26,13 +28,23 @@ export class CVBuilderService {
                 workExperiences: true,
                 skills: true,
                 references: true,
+                user: true,
             },
         });
     }
 
-    static async createCV(data: CreateCVData) {
-        if (!data) return prisma.cV.create({ data: {} })
+    static async sendCVDoc(cvId: string, userId: string) {
+        const fullCV = await this.getFullCV(cvId);
 
+        if (fullCV?.user) {
+            await sendEmail({
+                to: fullCV.user.email,
+                ...cvDownloadedTemplate(fullCV.user.email.split('@')[0]),
+            });
+        }
+    }
+
+    static async createCV(data: CreateCVData, userId: string) {
         const {
             personalDetails,
             addresses,
@@ -44,6 +56,7 @@ export class CVBuilderService {
 
         return prisma.cV.create({
             data: {
+                user: { connect: { id: userId } },
                 personalDetails: personalDetails ? { create: personalDetails } : undefined,
                 addresses: addresses ? { create: addresses } : undefined,
                 educations: educations ? { create: educations } : undefined,
@@ -72,15 +85,8 @@ export class CVBuilderService {
             references,
         } = data;
 
-        // Transactional update: Delete existing relations and recreate them
-        // This ensures the current state exactly matches the input data
         return prisma.$transaction(async (tx) => {
-            // 1. Update Personal Details (Upsert or Update)
             if (personalDetails) {
-                // Check if personal details exist, if so update, else create.
-                // Actually, simpler is to use update on CV with upsert on relation if possible,
-                // or just delete/create for consistency with others if we don't care about ID preservation of sub-entities.
-                // For PersonalDetails (1-to-1), upsert is better.
                 await tx.entityDetails.upsert({
                     where: { cvId },
                     create: { ...personalDetails, cvId },
@@ -88,7 +94,6 @@ export class CVBuilderService {
                 });
             }
 
-            // 2. Relations (1-to-Many): Delete all and Re-create
             await tx.address.deleteMany({ where: { cvId } });
             if (addresses && addresses.length > 0) {
                 await tx.address.createMany({
@@ -124,7 +129,6 @@ export class CVBuilderService {
                 });
             }
 
-            // Return the updated full CV
             return tx.cV.findUnique({
                 where: { id: cvId },
                 include: {

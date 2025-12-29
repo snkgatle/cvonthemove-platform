@@ -43,5 +43,12 @@ export const cvService = {
             responseType: 'blob',
         });
         return response.data;
+    },
+
+    generatePDF: async (data: CreateCVInput, templateId: string) => {
+        const response = await api.post('/generate-pdf', { data, templateId }, {
+            responseType: 'blob',
+        });
+        return response.data;
     }
 };

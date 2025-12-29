@@ -1,5 +1,7 @@
 import prisma from '../../../lib/prisma';
 import crypto from 'crypto';
+import { sendEmail } from '../../../lib/email';
+import { otpRequestTemplate } from '../../../templates/otpRequest';
 
 export class OtpService {
   static async generateOtp(email: string) {
@@ -16,9 +18,10 @@ export class OtpService {
       },
     });
 
-    // In a real application, you would send this OTP via email or SMS
-    // For now, we will just log it
-    console.log(`Generated OTP for ${email}: ${otp}`);
+    await sendEmail({
+      to: email,
+      ...otpRequestTemplate(email.split('@')[0], otp),
+    });
 
     return otp;
   }

@@ -4,6 +4,7 @@ import { CreateCVSchema } from './cvSchemas';
 export const GeneratePdfSchema = z.object({
     templateId: z.enum(['modern', 'classic', 'minimalist', 'creative', 'professional']),
     data: CreateCVSchema,
+    cvId: z.string(),
 });
 
 export type GeneratePdfInput = z.infer<typeof GeneratePdfSchema>;

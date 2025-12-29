@@ -1,20 +1,23 @@
 import { Request, Response } from 'express';
 import { generatePdf } from '../services/pdf.service';
 import { GeneratePdfSchema } from '../schemas/pdf.schema';
+import { CVBuilderService } from '../services/CVBuilderService';
 
 export const generatePdfController = async (req: Request, res: Response) => {
   try {
     const validation = GeneratePdfSchema.safeParse(req.body);
 
     if (!validation.success) {
-      // safeParse returns a discriminated union. If !success, 'error' exists and is a ZodError.
-      // However, sometimes TS inference struggles if it doesn't see the specific check.
-      // validation.error is the ZodError instance.
       res.status(400).json({ error: validation.error.issues });
       return;
     }
 
     const pdfBuffer = await generatePdf(validation.data);
+
+    const userId = req.user?.userId;
+    if (userId) {
+      await CVBuilderService.sendCVDoc(validation.data.cvId, userId);
+    }
 
     res.set({
       'Content-Type': 'application/pdf',
