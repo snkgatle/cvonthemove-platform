@@ -23,7 +23,8 @@ const LoginPage: React.FC = () => {
             setError(null);
             const response = await authService.login(data);
             localStorage.setItem('token', response.token);
-            navigate(from, { replace: true });
+            const redirectPath = from || '/dashboard';
+            navigate(redirectPath, { replace: true });
         } catch (err: unknown) {
             console.error('Login failed', err);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any

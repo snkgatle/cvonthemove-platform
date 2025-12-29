@@ -94,3 +94,9 @@ export type SkillInput = z.infer<typeof SkillSchema>;
 export type ReferenceInput = z.infer<typeof ReferenceSchema>;
 export type CreateCVInput = z.infer<typeof CreateCVSchema>;
 export type CreateCVFormInput = z.infer<typeof CreateCVFormSchema>;
+
+export interface CV extends CreateCVInput {
+    id: string;
+    createdAt: string;
+    updatedAt: string;
+}
