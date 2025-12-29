@@ -4,15 +4,15 @@ import { z } from 'zod';
 
 export const EntityDetailsSchema = z.object({
     fullName: z.string().min(1, "Full name is required"),
-    email: z.email("Invalid email address"),
+    email: z.email("Invalid email address").min(1, "Email is required"),
     phone: z.string().min(1, "Phone number is required"),
     location: z.string().min(1, "Location is required"),
     summary: z.string().min(1, "Summary is required"),
     linkedinUrl: z.string().url("Invalid URL").optional().or(z.literal('')),
-    idNumber: z.string().optional(),
-    languages: z.array(z.string()).default([]),
+    idNumber: z.string().min(1, "ID number is required"),
+    languages: z.array(z.string()).default(['English']),
     criminalRecord: z.string().optional(),
-    maritalStatus: z.string().optional(),
+    maritalStatus: z.string().min(1, "Marital status is required"),
 });
 
 export const AddressSchema = z.object({
@@ -57,12 +57,12 @@ export const ReferenceSchema = z.object({
 // --- Composite Schema (for full CV update/create) ---
 
 export const CreateCVSchema = z.object({
-    personalDetails: EntityDetailsSchema.optional(),
-    addresses: z.array(AddressSchema).optional(),
-    educations: z.array(EducationSchema).optional(),
+    personalDetails: EntityDetailsSchema.required(),
+    addresses: z.array(AddressSchema).min(1, "Address is required"),
+    educations: z.array(EducationSchema).min(1, "Education is required"),
     workExperiences: z.array(WorkExperienceSchema).optional(),
-    skills: z.array(SkillSchema).optional(),
-    references: z.array(ReferenceSchema).optional(),
+    skills: z.array(SkillSchema).min(1, "Skills are required"),
+    references: z.array(ReferenceSchema).min(1, "References are required"),
 });
 
 export type EntityDetailsInput = z.input<typeof EntityDetailsSchema>;

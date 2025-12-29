@@ -4,19 +4,19 @@ import { z } from 'zod';
 
 export const EntityDetailsSchema = z.object({
     fullName: z.string().min(1, "Full name is required"),
-    email: z.string().email("Invalid email address"),
+    email: z.email("Invalid email address").min(1, "Email is required"),
     phone: z.string().min(1, "Phone number is required"),
     location: z.string().min(1, "Location is required"),
     summary: z.string().min(1, "Summary is required"),
-    linkedinUrl: z.string().url("Invalid URL").optional().or(z.literal('')),
-    idNumber: z.string().optional(),
+    linkedinUrl: z.url("Invalid URL").optional().or(z.literal('')),
+    idNumber: z.string().min(1, "ID number is required"),
     // For the UI, languages might be a comma-separated string or an array.
     // The backend expects an array. We'll handle it as array in the form state for now
     // or as a comma separated string that gets split.
     // Let's stick to array of strings for structure, but UI might need a specific input.
-    languages: z.array(z.string()),
+    languages: z.array(z.string()).min(1, "Languages are required"),
     criminalRecord: z.string().optional(),
-    maritalStatus: z.string().optional(),
+    maritalStatus: z.string().min(1, "Marital status is required"),
 });
 
 export const AddressSchema = z.object({
@@ -62,12 +62,12 @@ export const ReferenceSchema = z.object({
 // --- Composite Schema ---
 
 export const CreateCVSchema = z.object({
-    personalDetails: EntityDetailsSchema.optional(),
-    addresses: z.array(AddressSchema).optional(),
-    educations: z.array(EducationSchema).optional(),
+    personalDetails: EntityDetailsSchema.required(),
+    addresses: z.array(AddressSchema).min(1, "Address is required"),
+    educations: z.array(EducationSchema).min(1, "Education is required"),
     workExperiences: z.array(WorkExperienceSchema).optional(),
-    skills: z.array(SkillSchema).optional(),
-    references: z.array(ReferenceSchema).optional(),
+    skills: z.array(SkillSchema).min(1, "Skills are required"),
+    references: z.array(ReferenceSchema).min(1, "References are required"),
 });
 
 // --- Form Specific Schema (with object wrappers for primitive arrays) ---

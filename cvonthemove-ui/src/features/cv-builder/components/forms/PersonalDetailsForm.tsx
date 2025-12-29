@@ -18,19 +18,19 @@ export const PersonalDetailsForm: React.FC = () => {
             <div className="grid-2">
                 <div className="form-group">
                     <label>Full Name</label>
-                    <input {...register("personalDetails.fullName")} placeholder="John Doe" />
+                    <input {...register("personalDetails.fullName")} placeholder="Mpho Leruo" />
                     {errors.personalDetails?.fullName && <span className="error">{errors.personalDetails.fullName.message}</span>}
                 </div>
 
                 <div className="form-group">
                     <label>Email</label>
-                    <input {...register("personalDetails.email")} placeholder="john@example.com" type="email" />
+                    <input {...register("personalDetails.email")} placeholder="mpho@example.com" type="email" />
                     {errors.personalDetails?.email && <span className="error">{errors.personalDetails.email.message}</span>}
                 </div>
 
                 <div className="form-group">
                     <label>Phone</label>
-                    <input {...register("personalDetails.phone")} placeholder="+1 234 567 890" />
+                    <input {...register("personalDetails.phone")} placeholder="082 123 4567" />
                     {errors.personalDetails?.phone && <span className="error">{errors.personalDetails.phone.message}</span>}
                 </div>
 
@@ -64,12 +64,12 @@ export const PersonalDetailsForm: React.FC = () => {
             </div>
 
             <div className="grid-2">
-                 <div className="form-group">
+                <div className="form-group">
                     <label>LinkedIn URL</label>
                     <input {...register("personalDetails.linkedinUrl")} placeholder="https://linkedin.com/in/..." />
                     {errors.personalDetails?.linkedinUrl && <span className="error">{errors.personalDetails.linkedinUrl.message}</span>}
                 </div>
-                 <div className="form-group">
+                <div className="form-group">
                     <label>Criminal Record</label>
                     <input {...register("personalDetails.criminalRecord")} placeholder="e.g. None" />
                 </div>
@@ -83,11 +83,11 @@ export const PersonalDetailsForm: React.FC = () => {
                             {...register(`personalDetails.languages.${index}.value`)}
                             placeholder="Language"
                         />
-                        <button type="button" onClick={() => remove(index)} className="icon-btn danger"><Trash2 size={16}/></button>
+                        <button type="button" onClick={() => remove(index)} className="icon-btn danger"><Trash2 size={16} /></button>
                     </div>
                 ))}
                 <button type="button" onClick={() => append({ value: "" })} className="btn-secondary small">
-                    <Plus size={16}/> Add Language
+                    <Plus size={16} /> Add Language
                 </button>
             </div>
         </div>
