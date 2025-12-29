@@ -1,10 +1,11 @@
 import React from 'react';
-import { useFormContext, useFieldArray } from 'react-hook-form';
+import { useFormContext, useFieldArray, useFormState } from 'react-hook-form';
 import { Plus, Trash2 } from 'lucide-react';
 import type { CreateCVFormInput } from '../../types';
 
 export const PersonalDetailsForm: React.FC = () => {
-    const { register, control, formState: { errors } } = useFormContext<CreateCVFormInput>();
+    const { register, control } = useFormContext<CreateCVFormInput>();
+    const { errors } = useFormState({ control });
 
     // Manage languages as a field array of objects { value: string }
     const { fields, append, remove } = useFieldArray({
@@ -18,36 +19,60 @@ export const PersonalDetailsForm: React.FC = () => {
             <div className="grid-2">
                 <div className="form-group">
                     <label>Full Name</label>
-                    <input {...register("personalDetails.fullName")} placeholder="Mpho Leruo" />
+                    <input
+                        {...register("personalDetails.fullName")}
+                        placeholder="Mpho Leruo"
+                        className={errors.personalDetails?.fullName ? "input-error" : ""}
+                    />
                     {errors.personalDetails?.fullName && <span className="error">{errors.personalDetails.fullName.message}</span>}
                 </div>
 
                 <div className="form-group">
                     <label>Email</label>
-                    <input {...register("personalDetails.email")} placeholder="mpho@example.com" type="email" />
+                    <input
+                        {...register("personalDetails.email")}
+                        placeholder="mpho@example.com"
+                        type="email"
+                        className={errors.personalDetails?.email ? "input-error" : ""}
+                    />
                     {errors.personalDetails?.email && <span className="error">{errors.personalDetails.email.message}</span>}
                 </div>
 
                 <div className="form-group">
                     <label>Phone</label>
-                    <input {...register("personalDetails.phone")} placeholder="082 123 4567" />
+                    <input
+                        {...register("personalDetails.phone")}
+                        placeholder="082 123 4567"
+                        className={errors.personalDetails?.phone ? "input-error" : ""}
+                    />
                     {errors.personalDetails?.phone && <span className="error">{errors.personalDetails.phone.message}</span>}
                 </div>
 
                 <div className="form-group">
                     <label>Location</label>
-                    <input {...register("personalDetails.location")} placeholder="City, Country" />
+                    <input
+                        {...register("personalDetails.location")}
+                        placeholder="City, Country"
+                        className={errors.personalDetails?.location ? "input-error" : ""}
+                    />
                     {errors.personalDetails?.location && <span className="error">{errors.personalDetails.location.message}</span>}
                 </div>
 
                 <div className="form-group">
                     <label>ID Number</label>
-                    <input {...register("personalDetails.idNumber")} placeholder="Optional" />
+                    <input
+                        {...register("personalDetails.idNumber")}
+                        placeholder="Optional"
+                        className={errors.personalDetails?.idNumber ? "input-error" : ""}
+                    />
                 </div>
 
                 <div className="form-group">
                     <label>Marital Status</label>
-                    <select {...register("personalDetails.maritalStatus")}>
+                    <select
+                        {...register("personalDetails.maritalStatus")}
+                        className={errors.personalDetails?.maritalStatus ? "input-error" : ""}
+                    >
                         <option value="">Select...</option>
                         <option value="Single">Single</option>
                         <option value="Married">Married</option>
@@ -59,14 +84,23 @@ export const PersonalDetailsForm: React.FC = () => {
 
             <div className="form-group">
                 <label>Summary</label>
-                <textarea {...register("personalDetails.summary")} rows={4} placeholder="Professional summary..." />
+                <textarea
+                    {...register("personalDetails.summary")}
+                    rows={4}
+                    placeholder="Professional summary..."
+                    className={errors.personalDetails?.summary ? "input-error" : ""}
+                />
                 {errors.personalDetails?.summary && <span className="error">{errors.personalDetails.summary.message}</span>}
             </div>
 
             <div className="grid-2">
                 <div className="form-group">
                     <label>LinkedIn URL</label>
-                    <input {...register("personalDetails.linkedinUrl")} placeholder="https://linkedin.com/in/..." />
+                    <input
+                        {...register("personalDetails.linkedinUrl")}
+                        placeholder="https://linkedin.com/in/..."
+                        className={errors.personalDetails?.linkedinUrl ? "input-error" : ""}
+                    />
                     {errors.personalDetails?.linkedinUrl && <span className="error">{errors.personalDetails.linkedinUrl.message}</span>}
                 </div>
                 <div className="form-group">

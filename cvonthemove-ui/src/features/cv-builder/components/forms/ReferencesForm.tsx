@@ -1,10 +1,11 @@
 import React from 'react';
-import { useFormContext, useFieldArray } from 'react-hook-form';
+import { useFormContext, useFieldArray, useFormState } from 'react-hook-form';
 import { Plus, Trash2 } from 'lucide-react';
 import type { CreateCVFormInput } from '../../types';
 
 export const ReferencesForm: React.FC = () => {
-    const { register, control, formState: { errors } } = useFormContext<CreateCVFormInput>();
+    const { register, control } = useFormContext<CreateCVFormInput>();
+    const { errors } = useFormState({ control });
     const { fields, append, remove } = useFieldArray({
         control,
         name: "references",
@@ -22,26 +23,47 @@ export const ReferencesForm: React.FC = () => {
                     <div className="grid-2">
                         <div className="form-group">
                             <label>Name</label>
-                            <input {...register(`references.${index}.name`)} placeholder="Name" />
+                            <input
+                                {...register(`references.${index}.name`)}
+                                placeholder="Name"
+                                className={errors.references?.[index]?.name ? "input-error" : ""}
+                            />
                              {errors.references?.[index]?.name && <span className="error">{errors.references[index]?.name?.message}</span>}
                         </div>
                         <div className="form-group">
                             <label>Relationship</label>
-                            <input {...register(`references.${index}.relationship`)} placeholder="Manager, Colleague, etc." />
+                            <input
+                                {...register(`references.${index}.relationship`)}
+                                placeholder="Manager, Colleague, etc."
+                                className={errors.references?.[index]?.relationship ? "input-error" : ""}
+                            />
                              {errors.references?.[index]?.relationship && <span className="error">{errors.references[index]?.relationship?.message}</span>}
                         </div>
                         <div className="form-group">
                             <label>Company</label>
-                            <input {...register(`references.${index}.company`)} placeholder="Company" />
+                            <input
+                                {...register(`references.${index}.company`)}
+                                placeholder="Company"
+                                className={errors.references?.[index]?.company ? "input-error" : ""}
+                            />
                         </div>
                          <div className="form-group">
                             <label>Email</label>
-                            <input {...register(`references.${index}.email`)} placeholder="Email" type="email" />
+                            <input
+                                {...register(`references.${index}.email`)}
+                                placeholder="Email"
+                                type="email"
+                                className={errors.references?.[index]?.email ? "input-error" : ""}
+                            />
                              {errors.references?.[index]?.email && <span className="error">{errors.references[index]?.email?.message}</span>}
                         </div>
                          <div className="form-group">
                             <label>Phone</label>
-                            <input {...register(`references.${index}.phone`)} placeholder="Phone" />
+                            <input
+                                {...register(`references.${index}.phone`)}
+                                placeholder="Phone"
+                                className={errors.references?.[index]?.phone ? "input-error" : ""}
+                            />
                         </div>
                     </div>
                 </div>

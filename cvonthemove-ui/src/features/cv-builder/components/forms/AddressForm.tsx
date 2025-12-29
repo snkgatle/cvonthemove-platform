@@ -1,10 +1,11 @@
 import React from 'react';
-import { useFormContext, useFieldArray } from 'react-hook-form';
+import { useFormContext, useFieldArray, useFormState } from 'react-hook-form';
 import { Plus, Trash2 } from 'lucide-react';
 import type { CreateCVFormInput } from '../../types';
 
 export const AddressForm: React.FC = () => {
-    const { register, control, formState: { errors } } = useFormContext<CreateCVFormInput>();
+    const { register, control } = useFormContext<CreateCVFormInput>();
+    const { errors } = useFormState({ control });
     const { fields, append, remove } = useFieldArray({
         control,
         name: "addresses",
@@ -22,26 +23,46 @@ export const AddressForm: React.FC = () => {
                     <div className="grid-2">
                         <div className="form-group">
                             <label>Line 1</label>
-                            <input {...register(`addresses.${index}.line1`)} placeholder="Street Address" />
+                            <input
+                                {...register(`addresses.${index}.line1`)}
+                                placeholder="Street Address"
+                                className={errors.addresses?.[index]?.line1 ? "input-error" : ""}
+                            />
                             {errors.addresses?.[index]?.line1 && <span className="error">{errors.addresses[index]?.line1?.message}</span>}
                         </div>
                         <div className="form-group">
                             <label>Line 2</label>
-                            <input {...register(`addresses.${index}.line2`)} placeholder="Apt, Suite, etc." />
+                            <input
+                                {...register(`addresses.${index}.line2`)}
+                                placeholder="Apt, Suite, etc."
+                                className={errors.addresses?.[index]?.line2 ? "input-error" : ""}
+                            />
                         </div>
                         <div className="form-group">
                             <label>City</label>
-                            <input {...register(`addresses.${index}.city`)} placeholder="City" />
+                            <input
+                                {...register(`addresses.${index}.city`)}
+                                placeholder="City"
+                                className={errors.addresses?.[index]?.city ? "input-error" : ""}
+                            />
                             {errors.addresses?.[index]?.city && <span className="error">{errors.addresses[index]?.city?.message}</span>}
                         </div>
                         <div className="form-group">
                             <label>Postal Code</label>
-                            <input {...register(`addresses.${index}.postalCode`)} placeholder="Zip Code" />
+                            <input
+                                {...register(`addresses.${index}.postalCode`)}
+                                placeholder="Zip Code"
+                                className={errors.addresses?.[index]?.postalCode ? "input-error" : ""}
+                            />
                             {errors.addresses?.[index]?.postalCode && <span className="error">{errors.addresses[index]?.postalCode?.message}</span>}
                         </div>
                         <div className="form-group">
                             <label>Country</label>
-                            <input {...register(`addresses.${index}.country`)} placeholder="Country" />
+                            <input
+                                {...register(`addresses.${index}.country`)}
+                                placeholder="Country"
+                                className={errors.addresses?.[index]?.country ? "input-error" : ""}
+                            />
                             {errors.addresses?.[index]?.country && <span className="error">{errors.addresses[index]?.country?.message}</span>}
                         </div>
                     </div>
