@@ -2,15 +2,10 @@ import { CreateCVSchema } from '../schemas/cvSchemas';
 import { Request, Response } from 'express';
 import { CVBuilderService } from '../services/CVBuilderService';
 
-interface AuthenticatedRequest extends Request {
-    user?: {
-        id: string;
-    }
-}
 export class CVBuilderController {
-    static async getAllCVs(req: AuthenticatedRequest, res: Response) {
+    static async getAllCVs(req: Request, res: Response) {
         try {
-            const userId = req.user?.id;
+            const userId = (req as any).user?.userId;
             if (!userId) {
                 return res.status(401).json({ error: 'Unauthorized' });
             }

@@ -29,6 +29,7 @@ WORKDIR /app
 
 # Set environment to production
 ENV NODE_ENV=production
+ENV FRONTEND_URL=https://cvonthemove-52aec.appspot.com
 
 # Copy package files
 COPY package*.json ./
