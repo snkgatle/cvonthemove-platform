@@ -26,25 +26,28 @@ export const CVBuilderForm: React.FC<CVBuilderFormProps> = ({
     submitIcon: Icon = Save
 }) => {
     // Transform initialData to form structure (wrap languages)
+    const defaultPersonalDetails = {
+        languages: [],
+        fullName: "",
+        email: "",
+        phone: "",
+        location: "",
+        summary: "",
+        linkedinUrl: "",
+        idNumber: "",
+        criminalRecord: "",
+        maritalStatus: "",
+    };
+
+    // Transform initialData to form structure (wrap languages)
     const formInitialValues: CreateCVFormInput = initialData ? {
         ...initialData,
         personalDetails: initialData.personalDetails ? {
             ...initialData.personalDetails,
             languages: initialData.personalDetails.languages ? initialData.personalDetails.languages.map(l => ({ value: l })) : []
-        } : undefined
+        } : defaultPersonalDetails
     } : {
-        personalDetails: {
-            languages: [],
-            fullName: "",
-            email: "",
-            phone: "",
-            location: "",
-            summary: "",
-            linkedinUrl: "",
-            idNumber: "",
-            criminalRecord: "",
-            maritalStatus: "",
-        },
+        personalDetails: defaultPersonalDetails,
         addresses: [],
         educations: [],
         workExperiences: [],
@@ -59,12 +62,15 @@ export const CVBuilderForm: React.FC<CVBuilderFormProps> = ({
 
     const handleFormSubmit = (data: CreateCVFormInput) => {
         // Transform back to API structure (unwrap languages)
+        // Ensure personalDetails is always present and correctly typed
         const apiData: CreateCVInput = {
             ...data,
-            personalDetails: data.personalDetails ? {
-                ...data.personalDetails,
-                languages: data.personalDetails.languages ? data.personalDetails.languages.map(l => l.value) : []
-            } : undefined
+            personalDetails: {
+                ...(data.personalDetails || initialData?.personalDetails || formInitialValues.personalDetails),
+                languages: data.personalDetails?.languages
+                    ? data.personalDetails.languages.map(l => l.value)
+                    : (initialData?.personalDetails?.languages || [])
+            }
         };
         onSubmit(apiData);
     };
@@ -73,8 +79,8 @@ export const CVBuilderForm: React.FC<CVBuilderFormProps> = ({
         <FormProvider {...methods}>
             <form onSubmit={methods.handleSubmit(handleFormSubmit)} className="cv-builder-form">
                 <div className="form-header">
-                     <h2>CV Details</h2>
-                     <p>Fill in the details below to generate your CV.</p>
+                    <h2>CV Details</h2>
+                    <p>Fill in the details below to generate your CV.</p>
                 </div>
 
                 <PersonalDetailsForm />

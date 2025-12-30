@@ -77,12 +77,12 @@ export const PersonalDetailsFormSchema = EntityDetailsSchema.extend({
 });
 
 export const CreateCVFormSchema = z.object({
-    personalDetails: PersonalDetailsFormSchema.optional(),
-    addresses: z.array(AddressSchema).optional(),
-    educations: z.array(EducationSchema).optional(),
+    personalDetails: PersonalDetailsFormSchema.required(),
+    addresses: z.array(AddressSchema).min(1, "Address is required"),
+    educations: z.array(EducationSchema).min(1, "Education is required"),
     workExperiences: z.array(WorkExperienceSchema).optional(),
-    skills: z.array(SkillSchema).optional(),
-    references: z.array(ReferenceSchema).optional(),
+    skills: z.array(SkillSchema).min(1, "Skills are required"),
+    references: z.array(ReferenceSchema).min(1, "References are required"),
 });
 
 

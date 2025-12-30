@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { cvService } from '../services/cvService';
+import { type CV } from '../types';
 
 export const DashboardPage = () => {
     const [cvs, setCvs] = useState<CV[]>([]);
