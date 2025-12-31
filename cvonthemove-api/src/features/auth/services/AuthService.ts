@@ -37,6 +37,34 @@ export class AuthService {
 
         // Omit password from return
         const { password, ...userWithoutPassword } = user;
+
+        // Link existing orphan CVs (created before registration) to this user
+        try {
+            // Find CVs where personalDetails.email matches user.email AND userId is null
+            // Note: Prisma relation filtering on 1-to-1 relation is slightly complex, 
+            // but we can query EntityDetails directly or use CV query.
+            // Using EntityDetails is more direct for the email check.
+            const matchingDetails = await prisma.entityDetails.findMany({
+                where: {
+                    email: user.email,
+                    cv: { userId: null } // Only link if not already linked (or maybe steal them? safe to assume null)
+                },
+                select: { cvId: true }
+            });
+
+            const cvIds = matchingDetails.map(d => d.cvId);
+
+            if (cvIds.length > 0) {
+                await prisma.cV.updateMany({
+                    where: { id: { in: cvIds } },
+                    data: { userId: user.id }
+                });
+            }
+        } catch (error) {
+            console.error("Failed to link existing CVs", error);
+            // Don't fail registration if linking fails
+        }
+
         return userWithoutPassword;
     }
 

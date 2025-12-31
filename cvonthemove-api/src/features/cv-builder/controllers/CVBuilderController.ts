@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import { CVBuilderService } from '../services/CVBuilderService';
 
 export class CVBuilderController {
-    static async getAllCVs(req: Request, res: Response) {
+    static async getAllCVs(req: any, res: Response) {
         try {
             const userId = (req as any).user?.userId;
             if (!userId) {

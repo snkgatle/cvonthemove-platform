@@ -44,7 +44,7 @@ export class CVBuilderService {
         }
     }
 
-    static async createCV(data: CreateCVData, userId: string) {
+    static async createCV(data: CreateCVData, userId?: string) {
         const {
             personalDetails,
             addresses,
@@ -54,9 +54,26 @@ export class CVBuilderService {
             references,
         } = data;
 
+        let ownerId = userId;
+
+        // If no userId provided (or even if it is, depending on policy, but let's stick to session if present),
+        // try to find user by email to link.
+        // User request: "link ... based on email".
+        // Use case: Unauthenticated creation or ensuring link to correct account?
+        // If I am logged in, I want it linked to ME (userId).
+        // If I am NOT logged in (public builder), I want it linked to my account if it exists.
+        if (!ownerId && personalDetails?.email) {
+            const user = await prisma.user.findUnique({
+                where: { email: personalDetails.email },
+            });
+            if (user) {
+                ownerId = user.id;
+            }
+        }
+
         return prisma.cV.create({
             data: {
-                user: { connect: { id: userId } },
+                user: ownerId ? { connect: { id: ownerId } } : undefined,
                 personalDetails: personalDetails ? { create: personalDetails } : undefined,
                 addresses: addresses ? { create: addresses } : undefined,
                 educations: educations ? { create: educations } : undefined,
