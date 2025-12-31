@@ -111,15 +111,17 @@ export const PersonalDetailsForm: React.FC = () => {
 
             <div className="form-group">
                 <label>Languages</label>
-                {fields.map((field, index) => (
-                    <div key={field.id} className="array-item-row">
-                        <input
-                            {...register(`personalDetails.languages.${index}.value`)}
-                            placeholder="Language"
-                        />
-                        <button type="button" onClick={() => remove(index)} className="icon-btn danger"><Trash2 size={16} /></button>
-                    </div>
-                ))}
+                <div className="grid-3">
+                    {fields.map((field, index) => (
+                        <div key={field.id} className="array-item-row">
+                            <input
+                                {...register(`personalDetails.languages.${index}.value`)}
+                                placeholder="Language"
+                            />
+                            <button type="button" onClick={() => remove(index)} className="icon-btn danger"><Trash2 size={16} /></button>
+                        </div>
+                    ))}
+                </div>
                 <button type="button" onClick={() => append({ value: "" })} className="btn-secondary small">
                     <Plus size={16} /> Add Language
                 </button>
