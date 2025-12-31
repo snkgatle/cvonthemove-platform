@@ -7,6 +7,7 @@ import { type CreateCVInput } from '../types';
 import { cvService } from '../services/cvService';
 import { ArrowRight, ArrowLeft } from 'lucide-react';
 import '../styles/form.css';
+import Preloader from '../../../components/Preloader';
 export { DashboardPage } from './DashboardPage';
 
 const CreateStep = {
@@ -70,6 +71,7 @@ export const CreateCVPage = () => {
 
     return (
         <div className="p-4 md:p-8 bg-slate-900 min-h-screen">
+            {isDownloading && <Preloader />}
             {/* Progress Indicator */}
             <div className="max-w-4xl mx-auto mb-8">
                 <div className="flex items-center justify-between relative">
@@ -196,7 +198,7 @@ export const EditCVPage = () => {
     };
 
     if (loading) {
-        return <div className="text-white text-center mt-8">Loading...</div>;
+        return <Preloader />;
     }
 
     return (
