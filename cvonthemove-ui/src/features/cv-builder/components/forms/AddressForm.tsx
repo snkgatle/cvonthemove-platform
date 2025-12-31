@@ -2,6 +2,7 @@ import React from 'react';
 import { useFormContext, useFieldArray, useFormState } from 'react-hook-form';
 import { Plus, Trash2 } from 'lucide-react';
 import type { CreateCVFormInput } from '../../types';
+import { countryList } from '../../countries';
 
 export const AddressForm: React.FC = () => {
     const { register, control } = useFormContext<CreateCVFormInput>();
@@ -58,11 +59,16 @@ export const AddressForm: React.FC = () => {
                         </div>
                         <div className="form-group">
                             <label>Country</label>
-                            <input
+                            <select
                                 {...register(`addresses.${index}.country`)}
-                                placeholder="Country"
                                 className={errors.addresses?.[index]?.country ? "input-error" : ""}
-                            />
+                                defaultValue=""
+                            >
+                                <option value="" disabled>Select a country</option>
+                                {countryList.map(country => (
+                                    <option key={country} value={country}>{country}</option>
+                                ))}
+                            </select>
                             {errors.addresses?.[index]?.country && <span className="error">{errors.addresses[index]?.country?.message}</span>}
                         </div>
                     </div>
