@@ -83,12 +83,24 @@ export const CVBuilderForm: React.FC<CVBuilderFormProps> = ({
                     <p>Fill in the details below to generate your CV.</p>
                 </div>
 
-                <PersonalDetailsForm />
-                <AddressForm />
-                <EducationForm />
-                <WorkExperienceForm />
-                <SkillsForm />
-                <ReferencesForm />
+                <div id="personalDetails">
+                    <PersonalDetailsForm />
+                </div>
+                <div id="addresses">
+                    <AddressForm />
+                </div>
+                <div id="educations">
+                    <EducationForm />
+                </div>
+                <div id="workExperiences">
+                    <WorkExperienceForm />
+                </div>
+                <div id="skills">
+                    <SkillsForm />
+                </div>
+                <div id="references">
+                    <ReferencesForm />
+                </div>
 
                 <div className="form-actions">
                     <button type="submit" disabled={isSubmitting} className="btn-primary">

@@ -3,20 +3,6 @@ import { Request, Response } from 'express';
 import { CVBuilderService } from '../services/CVBuilderService';
 
 export class CVBuilderController {
-    static async getAllCVs(req: any, res: Response) {
-        try {
-            const userId = (req as any).user?.userId;
-            if (!userId) {
-                return res.status(401).json({ error: 'Unauthorized' });
-            }
-
-            const cvs = await CVBuilderService.getAllCVs(userId);
-            res.json(cvs);
-        } catch (error) {
-            console.error(error);
-            res.status(500).json({ error: 'Internal Server Error' });
-        }
-    }
 
     static async getCV(req: Request, res: Response) {
         try {
@@ -42,6 +28,25 @@ export class CVBuilderController {
             };
 
             res.json(response);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    }
+
+    static async getCVByUserId(req: Request, res: Response) {
+        try {
+            const userId = (req as any).user?.userId;
+            if (!userId) {
+                return res.status(401).json({ error: 'Unauthorized' });
+            }
+
+            const cv = await CVBuilderService.getCVByUserId(userId);
+            if (!cv) {
+                return res.status(404).json({ error: 'CV not found' });
+            }
+
+            res.json(cv);
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: 'Internal Server Error' });

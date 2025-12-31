@@ -70,8 +70,8 @@ router.post('/generate-pdf', generatePdfController);
  *       404:
  *         description: CV not found
  */
+router.get('/cv-builder/my-cv', authenticate, CVBuilderController.getCVByUserId);
 router.get('/cv-builder/:cvId', CVBuilderController.getCV);
-router.get('/cv-builder', authenticate, CVBuilderController.getAllCVs);
 
 /**
  * @openapi

@@ -4,19 +4,6 @@ import { sendEmail } from '../../../lib/email';
 import { cvDownloadedTemplate } from '../../../templates/cvDownloaded';
 
 export class CVBuilderService {
-    static async getAllCVs(userId: string) {
-        return prisma.cV.findMany({
-            where: { userId },
-            include: {
-                personalDetails: true,
-                addresses: true,
-                educations: true,
-                workExperiences: true,
-                skills: true,
-                references: true,
-            },
-        });
-    }
 
     static async getFullCV(cvId: string) {
         return prisma.cV.findUnique({
@@ -33,6 +20,20 @@ export class CVBuilderService {
         });
     }
 
+    static async getCVByUserId(userId: string) {
+        return prisma.cV.findFirst({
+            where: { userId },
+            include: {
+                personalDetails: true,
+                addresses: true,
+                educations: true,
+                workExperiences: true,
+                skills: true,
+                references: true,
+            },
+        });
+    }
+
     static async sendCVDoc(cvId: string, userId: string) {
         const fullCV = await this.getFullCV(cvId);
 
@@ -44,7 +45,15 @@ export class CVBuilderService {
         }
     }
 
-    static async createCV(data: CreateCVData, userId?: string) {
+    static async createCV(data: CreateCVData, userId: string) {
+        const existingCV = await prisma.cV.findFirst({
+            where: { userId },
+        });
+
+        if (existingCV) {
+            throw new Error('User already has a CV. Only one CV is allowed per user.');
+        }
+
         const {
             personalDetails,
             addresses,
