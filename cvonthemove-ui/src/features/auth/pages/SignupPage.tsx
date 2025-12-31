@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { authService } from '../services/authService';
+import { cvService } from '../../cv-builder/services/cvService';
 import { RegisterSchema, type RegisterInput } from '../types';
 import { Lock, Mail, AlertCircle } from 'lucide-react';
 import logo from '../../../assets/white.svg';
 
 const SignupPage: React.FC = () => {
     const navigate = useNavigate();
+    const location = useLocation();
+    const cvData = location.state?.cvData;
     const [error, setError] = useState<string | null>(null);
 
     const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<RegisterInput>({
@@ -21,7 +24,18 @@ const SignupPage: React.FC = () => {
             setError(null);
             const response = await authService.register(data);
             localStorage.setItem('token', response.token);
-            navigate('/create', { replace: true });
+
+            if (cvData) {
+                try {
+                    const newCV = await cvService.createCV(cvData);
+                    navigate(`/edit/${newCV.id}`, { replace: true });
+                } catch (saveError) {
+                    console.error('Failed to automatically save CV:', saveError);
+                    navigate('/', { replace: true });
+                }
+            } else {
+                navigate('/create', { replace: true });
+            }
         } catch (err: unknown) {
             console.error('Registration failed', err);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
