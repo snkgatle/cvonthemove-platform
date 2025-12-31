@@ -145,6 +145,8 @@ export const EditCVPage = () => {
     const location = useLocation();
     const [initialData, setInitialData] = useState<CreateCVInput | undefined>(undefined);
     const [loading, setLoading] = useState(true);
+    const searchParams = new URLSearchParams(location.search);
+    const section = searchParams.get('section');
 
     useEffect(() => {
         // Auth check
@@ -170,6 +172,15 @@ export const EditCVPage = () => {
 
         fetchCV();
     }, [id, navigate, location]);
+
+    useEffect(() => {
+        if (!loading && section) {
+            const element = document.getElementById(section);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    }, [loading, section]);
 
     const handleSubmit = async (data: CreateCVInput) => {
         if (!id) return;
