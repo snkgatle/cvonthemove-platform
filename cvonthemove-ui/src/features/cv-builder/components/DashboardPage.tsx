@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { cvService } from '../services/cvService';
 import { type CV } from '../types';
+import Preloader from '../../../components/Preloader';
 
 export const DashboardPage = () => {
     const [cv, setCv] = useState<CV | null>(null);
@@ -30,7 +31,7 @@ export const DashboardPage = () => {
     }, [navigate]);
 
     if (loading) {
-        return <div className="text-white text-center mt-8">Loading...</div>;
+        return <Preloader />;
     }
 
     if (!cv) {
