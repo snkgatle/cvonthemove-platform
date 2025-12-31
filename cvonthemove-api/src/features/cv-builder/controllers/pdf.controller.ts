@@ -7,6 +7,8 @@ export const generatePdfController = async (req: Request, res: Response) => {
   try {
     const validation = GeneratePdfSchema.safeParse(req.body);
 
+    console.log(validation, req.body);
+
     if (!validation.success) {
       res.status(400).json({ error: validation.error.issues });
       return;
@@ -15,7 +17,8 @@ export const generatePdfController = async (req: Request, res: Response) => {
     const pdfBuffer = await generatePdf(validation.data);
 
     const userId = req.user?.userId;
-    if (userId) {
+
+    if (userId && validation.data.cvId) {
       await CVBuilderService.sendCVDoc(validation.data.cvId, userId);
     }
 
