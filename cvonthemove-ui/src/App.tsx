@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import LandingPage from './features/landing/LandingPage';
 import LoginPage from './features/auth/pages/LoginPage';
 import SignupPage from './features/auth/pages/SignupPage';
+import { AccountPage } from './features/auth/pages/AccountPage';
 import './App.css';
 import { CreateCVPage, EditCVPage, DashboardPage } from './features/cv-builder/components/Pages';
 
@@ -17,6 +18,7 @@ function App() {
         <Route path="/download" element={<LoginPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
+        <Route path="/account" element={<AccountPage />} />
       </Routes>
     </Router>
   );

@@ -48,4 +48,17 @@ export class AuthController {
             res.status(500).json({ error: 'An error occurred' });
         }
     }
+
+    static async changePassword(req: Request, res: Response) {
+        try {
+            const userId = (req as any).user.userId;
+            await AuthService.changePassword(userId, req.body);
+            res.status(200).json({ message: 'Password changed successfully' });
+        } catch (error: any) {
+            if (error.message === 'Invalid old password') {
+                return res.status(400).json({ error: error.message });
+            }
+            res.status(500).json({ error: 'Failed to change password' });
+        }
+    }
 }

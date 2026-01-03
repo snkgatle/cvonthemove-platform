@@ -10,5 +10,11 @@ export const RegisterSchema = z.object({
     password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
+export const ChangePasswordSchema = z.object({
+    oldPassword: z.string().min(1, "Old password is required"),
+    newPassword: z.string().min(6, "Password must be at least 6 characters"),
+});
+
 export type LoginInput = z.input<typeof LoginSchema>;
 export type RegisterInput = z.input<typeof RegisterSchema>;
+export type ChangePasswordInput = z.input<typeof ChangePasswordSchema>;

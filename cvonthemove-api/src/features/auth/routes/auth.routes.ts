@@ -159,4 +159,35 @@ router.post('/forgot-password', AuthController.forgotPassword);
  */
 router.post('/reset-password', AuthController.resetPassword);
 
+/**
+ * @openapi
+ * /auth/change-password:
+ *   post:
+ *     summary: Change password
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [oldPassword, newPassword]
+ *             properties:
+ *               oldPassword:
+ *                 type: string
+ *               newPassword:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Password changed
+ *       400:
+ *         description: Invalid old password
+ */
+import { authenticate } from '../../../middleware/authenticate';
+import { ChangePasswordSchema } from '../schemas/authSchemas';
+
+router.post('/change-password', authenticate, validate(ChangePasswordSchema), AuthController.changePassword);
+
 export default router;

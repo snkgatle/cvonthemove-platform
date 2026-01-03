@@ -102,7 +102,7 @@ router.get('/cv-builder/:cvId', CVBuilderController.getCV);
  *       201:
  *         description: CV created successfully
  */
-router.post('/cv-builder', validate(CreateCVSchema), CVBuilderController.createCV);
+router.post('/cv-builder', authenticate, validate(CreateCVSchema), CVBuilderController.createCV);
 
 /**
  * @openapi
@@ -139,7 +139,7 @@ router.post('/cv-builder', validate(CreateCVSchema), CVBuilderController.createC
  *       200:
  *         description: CV updated successfully
  */
-router.put('/cv-builder/:cvId', validate(CreateCVSchema), CVBuilderController.updateCV);
+router.put('/cv-builder/:cvId', authenticate, validate(CreateCVSchema), CVBuilderController.updateCV);
 
 /**
  * @openapi
@@ -191,7 +191,7 @@ router.put('/cv-builder/:cvId', validate(CreateCVSchema), CVBuilderController.up
  */
 router.get('/entity-details', EntityDetailsController.get);
 router.post('/entity-details', validate(EntityDetailsSchema), EntityDetailsController.upsert); // Upsert handles create/update
-router.delete('/entity-details', EntityDetailsController.delete);
+router.delete('/entity-details', authenticate, EntityDetailsController.delete);
 
 /**
  * @openapi

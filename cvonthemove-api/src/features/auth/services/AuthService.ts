@@ -30,6 +30,10 @@ export class AuthService {
             },
         });
 
+        const token = jwt.sign({ userId: user.id, email: user.email }, JWT_SECRET, {
+            expiresIn: '24h',
+        });
+
         await sendEmail({
             to: user.email,
             ...signUpTemplate(user.email.split('@')[0]),
@@ -65,7 +69,7 @@ export class AuthService {
             // Don't fail registration if linking fails
         }
 
-        return userWithoutPassword;
+        return { ...userWithoutPassword, token };
     }
 
     static async login(data: LoginInput) {
@@ -154,6 +158,21 @@ export class AuthService {
                 passwordResetToken: null,
                 passwordResetExpires: null,
             },
+        });
+    }
+
+    static async changePassword(userId: string, data: { oldPassword: string; newPassword: string }) {
+        const user = await prisma.user.findUnique({ where: { id: userId } });
+        if (!user) throw new Error('User not found');
+
+        const isMatch = await bcrypt.compare(data.oldPassword, user.password);
+        if (!isMatch) throw new Error('Invalid old password');
+
+        const hashedPassword = await bcrypt.hash(data.newPassword, 10);
+
+        await prisma.user.update({
+            where: { id: userId },
+            data: { password: hashedPassword },
         });
     }
 }
