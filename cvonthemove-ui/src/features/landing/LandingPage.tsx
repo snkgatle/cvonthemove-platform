@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Plus, Edit3, Download } from 'lucide-react';
+import { Plus, Edit3, Download, Bot } from 'lucide-react';
 import logo from '../../assets/white.svg';
+import { AIAgentModal } from '../cv-builder/components/AIAgent/AIAgentModal';
+import { cvService } from '../cv-builder/services/cvService';
+import { type CreateCVInput } from '../cv-builder/types';
 
 const LandingPage: React.FC = () => {
     const navigate = useNavigate();
+    const [isAgentOpen, setIsAgentOpen] = useState(false);
 
     const containerVariants = {
         hidden: { opacity: 0 },
@@ -21,6 +25,34 @@ const LandingPage: React.FC = () => {
     const itemVariants = {
         hidden: { y: 20, opacity: 0 },
         visible: { y: 0, opacity: 1 }
+    };
+
+    const handleAgentDownload = async (data: CreateCVInput) => {
+        try {
+            const blob = await cvService.generatePDF(data, 'classic');
+            const url = window.URL.createObjectURL(new Blob([blob]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `cv-${data.personalDetails?.fullName.replace(/\s+/g, '-').toLowerCase() || 'document'}.pdf`);
+            document.body.appendChild(link);
+            link.click();
+            if (link.parentNode) link.parentNode.removeChild(link);
+            window.URL.revokeObjectURL(url);
+            setIsAgentOpen(false);
+        } catch (error) {
+            console.error("Failed to generate PDF from Agent", error);
+            alert("Failed to generate PDF. Please try again.");
+        }
+    };
+
+    const handleAgentSave = (data: CreateCVInput) => {
+        navigate('/signup', {
+            state: {
+                cvData: data,
+                templateId: 'classic'
+            }
+        });
+        setIsAgentOpen(false);
     };
 
     return (
@@ -46,12 +78,18 @@ const LandingPage: React.FC = () => {
                     Your career journey starts here.
                 </motion.p>
 
-                <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+                <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
                     <Card
                         icon={<Plus className="w-8 h-8 text-blue-400" />}
                         title="Create CV"
                         description="Start from scratch with our easy-to-use wizard."
                         onClick={() => navigate('/create')}
+                    />
+                    <Card
+                        icon={<Bot className="w-8 h-8 text-indigo-400" />}
+                        title="Use AI"
+                        description="Let our AI agent help you build your CV."
+                        onClick={() => setIsAgentOpen(true)}
                     />
                     <Card
                         icon={<Edit3 className="w-8 h-8 text-emerald-400" />}
@@ -67,6 +105,13 @@ const LandingPage: React.FC = () => {
                     />
                 </motion.div>
             </motion.div>
+
+            <AIAgentModal
+                isOpen={isAgentOpen}
+                onClose={() => setIsAgentOpen(false)}
+                onDownload={handleAgentDownload}
+                onSave={handleAgentSave}
+            />
         </div>
     );
 };
