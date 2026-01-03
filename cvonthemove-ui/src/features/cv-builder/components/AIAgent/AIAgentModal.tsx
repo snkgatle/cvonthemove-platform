@@ -81,12 +81,12 @@ export const AIAgentModal: React.FC<AIAgentModalProps> = ({ isOpen, onClose, onD
 
     const addAgentMessage = (text: string) => {
         const id = Date.now().toString();
-        setMessages((prev) => [...prev, { id, type: 'agent', text }]);
+        setMessages((prev: any) => [...prev, { id, type: 'agent', text }]);
     };
 
     const addUserMessage = (text: string) => {
         const id = Date.now().toString();
-        setMessages((prev) => [...prev, { id, type: 'user', text }]);
+        setMessages((prev: any) => [...prev, { id, type: 'user', text }]);
     };
 
     const handleSendMessage = () => {
