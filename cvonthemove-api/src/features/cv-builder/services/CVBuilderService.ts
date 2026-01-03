@@ -1,5 +1,5 @@
 import prisma from '../../../lib/prisma';
-import { CreateCVData } from '../schemas/cvSchemas';
+import { CreateCVData, PatchCVData } from '../schemas/cvSchemas';
 import { sendEmail } from '../../../lib/email';
 import { cvDownloadedTemplate } from '../../../templates/cvDownloaded';
 
@@ -153,6 +153,83 @@ export class CVBuilderService {
                 await tx.reference.createMany({
                     data: references.map(r => ({ ...r, cvId })),
                 });
+            }
+
+            return tx.cV.findUnique({
+                where: { id: cvId },
+                include: {
+                    personalDetails: true,
+                    addresses: true,
+                    educations: true,
+                    workExperiences: true,
+                    skills: true,
+                    references: true,
+                },
+            });
+        });
+    }
+    static async patchCV(cvId: string, data: PatchCVData) {
+        const {
+            personalDetails,
+            addresses,
+            educations,
+            workExperiences,
+            skills,
+            references,
+        } = data;
+
+        return prisma.$transaction(async (tx) => {
+            if (personalDetails) {
+                await tx.entityDetails.upsert({
+                    where: { cvId },
+                    create: { ...personalDetails, cvId },
+                    update: personalDetails,
+                });
+            }
+
+            if (addresses) {
+                await tx.address.deleteMany({ where: { cvId } });
+                if (addresses.length > 0) {
+                    await tx.address.createMany({
+                        data: addresses.map(a => ({ ...a, cvId })),
+                    });
+                }
+            }
+
+            if (educations) {
+                await tx.education.deleteMany({ where: { cvId } });
+                if (educations.length > 0) {
+                    await tx.education.createMany({
+                        data: educations.map(e => ({ ...e, cvId })),
+                    });
+                }
+            }
+
+            if (workExperiences) {
+                await tx.workExperience.deleteMany({ where: { cvId } });
+                if (workExperiences.length > 0) {
+                    await tx.workExperience.createMany({
+                        data: workExperiences.map(w => ({ ...w, cvId })),
+                    });
+                }
+            }
+
+            if (skills) {
+                await tx.skill.deleteMany({ where: { cvId } });
+                if (skills.length > 0) {
+                    await tx.skill.createMany({
+                        data: skills.map(s => ({ ...s, cvId })),
+                    });
+                }
+            }
+
+            if (references) {
+                await tx.reference.deleteMany({ where: { cvId } });
+                if (references.length > 0) {
+                    await tx.reference.createMany({
+                        data: references.map(r => ({ ...r, cvId })),
+                    });
+                }
             }
 
             return tx.cV.findUnique({

@@ -197,6 +197,19 @@ export const EditCVPage = () => {
         }
     };
 
+    const handlePatch = async (section: keyof CreateCVInput, data: Partial<CreateCVInput>) => {
+        if (!id) return;
+        try {
+            await cvService.patchCV(id, data);
+            // Optional: Show a toast notification instead of alert
+            // alert(`${section} saved successfully!`);
+        } catch (error) {
+            console.error(`Failed to patch ${section}`, error);
+            alert(`Failed to save ${section}. Please try again.`);
+            throw error;
+        }
+    };
+
     if (loading) {
         return <Preloader />;
     }
@@ -208,7 +221,8 @@ export const EditCVPage = () => {
                 <CVBuilderForm
                     initialData={initialData}
                     onSubmit={handleSubmit}
-                    submitLabel="Save Changes"
+                    onPatch={handlePatch}
+                    submitLabel="Save Full CV"
                 />
             )}
         </div>

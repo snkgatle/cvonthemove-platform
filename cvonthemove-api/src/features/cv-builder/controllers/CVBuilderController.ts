@@ -1,4 +1,4 @@
-import { CreateCVSchema } from '../schemas/cvSchemas';
+import { CreateCVSchema, PatchCVSchema } from '../schemas/cvSchemas';
 import { Request, Response } from 'express';
 import { CVBuilderService } from '../services/CVBuilderService';
 
@@ -81,6 +81,24 @@ export class CVBuilderController {
             const parsedData = CreateCVSchema.parse(req.body);
 
             const cv = await CVBuilderService.updateCV(cvId, parsedData);
+            res.status(200).json(cv);
+        } catch (error) {
+            console.error(error);
+            if ((error as any).name === 'ZodError') {
+                return res.status(400).json({ error: 'Validation Error', details: (error as any).errors });
+            }
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    }
+    static async patchCV(req: Request, res: Response) {
+        try {
+            const { cvId } = req.params;
+            if (!cvId) return res.status(400).json({ error: 'cvId is required' });
+
+            // Validate partial input
+            const parsedData = PatchCVSchema.parse(req.body);
+
+            const cv = await CVBuilderService.patchCV(cvId, parsedData);
             res.status(200).json(cv);
         } catch (error) {
             console.error(error);

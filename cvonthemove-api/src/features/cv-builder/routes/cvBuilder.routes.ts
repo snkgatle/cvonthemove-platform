@@ -8,7 +8,8 @@ import {
     WorkExperienceSchema,
     SkillSchema,
     ReferenceSchema,
-    CreateCVSchema
+    CreateCVSchema,
+    PatchCVSchema
 } from '../schemas/cvSchemas';
 
 import { CVBuilderController } from '../controllers/CVBuilderController';
@@ -140,6 +141,30 @@ router.post('/cv-builder', authenticate, validate(CreateCVSchema), CVBuilderCont
  *         description: CV updated successfully
  */
 router.put('/cv-builder/:cvId', authenticate, validate(CreateCVSchema), CVBuilderController.updateCV);
+
+/**
+ * @openapi
+ * /cv-builder/{cvId}:
+ *   patch:
+ *     summary: Partially update CV
+ *     tags: [CV Builder]
+ *     parameters:
+ *       - in: path
+ *         name: cvId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       200:
+ *         description: CV updated successfully
+ */
+router.patch('/cv-builder/:cvId', authenticate, validate(PatchCVSchema), CVBuilderController.patchCV);
 
 /**
  * @openapi

@@ -30,6 +30,11 @@ export const cvService = {
         return response.data;
     },
 
+    patchCV: async (id: string, data: Partial<CreateCVInput>) => {
+        const response = await api.patch(`/cv-builder/${id}`, data);
+        return response.data;
+    },
+
     downloadCV: async (id: string) => {
         const response = await api.get(`/cv-builder/${id}/download`, {
             responseType: 'blob',

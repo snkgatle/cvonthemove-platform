@@ -65,6 +65,8 @@ export const CreateCVSchema = z.object({
     references: z.array(ReferenceSchema).min(1, "References are required"),
 });
 
+export const PatchCVSchema = CreateCVSchema.partial();
+
 export type EntityDetailsInput = z.input<typeof EntityDetailsSchema>;
 export type AddressInput = z.input<typeof AddressSchema>;
 export type EducationInput = z.input<typeof EducationSchema>;
@@ -73,3 +75,4 @@ export type SkillInput = z.input<typeof SkillSchema>;
 export type ReferenceInput = z.input<typeof ReferenceSchema>;
 export type CreateCVInput = z.input<typeof CreateCVSchema>;
 export type CreateCVData = z.infer<typeof CreateCVSchema>;
+export type PatchCVData = z.infer<typeof PatchCVSchema>;
