@@ -1,0 +1,17 @@
+runtime: nodejs20
+instance_class: F1
+service: cvonthemove-ui-qa
+
+
+handlers:
+  # Serve static assets
+  - url: /assets
+    static_dir: dist/assets
+
+  # Catch-all for SPA: serve index.html
+  - url: .*
+    static_files: dist/index.html
+    upload: dist/index.html
+
+automatic_scaling:
+  max_instances: 5
