@@ -202,9 +202,14 @@ export const EditCVPage = () => {
             setCurrentFormData(data);
             // Open modal instead of navigating
             setTemplateModalOpen(true);
-        } catch (error) {
+        } catch (error: any) {
             console.error("Failed to update CV", error);
-            alert("Failed to save CV. Please try again.");
+            if (error.response && error.response.status === 401) {
+                alert("Your session has expired. Please log in again.");
+                navigate('/login', { state: { from: location } });
+            } else {
+                alert("Failed to save CV. Please try again.");
+            }
         }
     };
 
@@ -220,6 +225,12 @@ export const EditCVPage = () => {
     };
 
     const handleDownload = async () => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            navigate('/login', { state: { from: location } });
+            return;
+        }
+
         if (!currentFormData || !selectedTemplate) return;
 
         setIsDownloading(true);
