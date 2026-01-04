@@ -8,6 +8,7 @@ import { cvService } from '../services/cvService';
 import { ArrowRight, ArrowLeft } from 'lucide-react';
 import '../styles/form.css';
 import Preloader from '../../../components/Preloader';
+import { DashboardHeader } from './DashboardHeader';
 export { DashboardPage } from './DashboardPage';
 
 const CreateStep = {
@@ -215,16 +216,19 @@ export const EditCVPage = () => {
     }
 
     return (
-        <div className="p-8 bg-slate-900 min-h-screen">
-            <h1 className="text-center text-white mb-8 text-3xl font-bold">Edit CV</h1>
-            {initialData && (
-                <CVBuilderForm
-                    initialData={initialData}
-                    onSubmit={handleSubmit}
-                    onPatch={handlePatch}
-                    submitLabel="Save Full CV"
-                />
-            )}
-        </div>
+        <>
+            <DashboardHeader />
+            <div className="p-8 bg-slate-900 min-h-screen">
+                <h1 className="text-center text-white mb-8 text-3xl font-bold">Edit CV</h1>
+                {initialData && (
+                    <CVBuilderForm
+                        initialData={initialData}
+                        onSubmit={handleSubmit}
+                        onPatch={handlePatch}
+                        submitLabel="Save Full CV"
+                    />
+                )}
+            </div>
+        </>
     );
 };
