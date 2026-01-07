@@ -13,6 +13,7 @@ model User {
   id        String   @id @default(uuid())
   email     String   @unique
   password  String
+  termsAccepted Boolean
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   cvs       CV[]

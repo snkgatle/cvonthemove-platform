@@ -34,18 +34,25 @@ export const cvService = {
         const response = await api.patch(`/cv-builder/${id}`, data);
         return response.data;
     },
-
-    downloadCV: async (id: string) => {
-        const response = await api.get(`/cv-builder/${id}/download`, {
-            responseType: 'blob',
-        });
-        return response.data;
-    },
-
     generatePDF: async (data: CreateCVInput, templateId: string) => {
         const response = await api.post('/generate-pdf', { data, templateId }, {
             responseType: 'blob',
         });
         return response.data;
-    }
+    },
+    downloadCV: async (data: CreateCVInput, template: string = 'modern') => {
+        const { idNumber } = data.personalDetails;
+        const blob = await cvService.generatePDF(data, template);
+
+        // Trigger download
+        const url = window.URL.createObjectURL(new Blob([blob]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `cv-${idNumber}.pdf`);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+
+        return blob;
+    },
 };

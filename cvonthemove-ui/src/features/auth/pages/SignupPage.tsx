@@ -33,6 +33,11 @@ const SignupPage: React.FC = () => {
                     console.error('Failed to automatically save CV:', saveError);
                     navigate('/', { replace: true });
                 }
+            } else if (location.state?.action === 'download') {
+                navigate('/dashboard', {
+                    replace: true,
+                    state: { openDownloadModal: true }
+                });
             } else {
                 navigate('/create', { replace: true });
             }
@@ -163,7 +168,7 @@ const SignupPage: React.FC = () => {
                             <p className="text-sm text-slate-400">
                                 Already have an account?{' '}
                                 <span
-                                    onClick={() => navigate('/login')}
+                                    onClick={() => navigate('/login', { state: location.state })}
                                     className="font-medium text-blue-400 hover:text-blue-300 cursor-pointer transition-colors"
                                 >
                                     Sign in

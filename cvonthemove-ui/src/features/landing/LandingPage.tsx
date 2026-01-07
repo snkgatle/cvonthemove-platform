@@ -103,7 +103,7 @@ const LandingPage: React.FC = () => {
                             icon={<Download className="w-8 h-8 text-purple-400" />}
                             title="Download"
                             description="Get your CV in PDF format instantly."
-                            onClick={() => navigate('/download')}
+                            onClick={() => navigate('/dashboard', { state: { openDownloadModal: true } })}
                         />
                     </motion.div>
                 </motion.div>

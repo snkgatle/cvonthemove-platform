@@ -195,24 +195,8 @@ export const EditCVPage = () => {
         }
     }, [loading, section]);
 
-    const handleEditSubmit = async (data: CreateCVInput) => {
-        if (!id) return;
-        try {
-            console.log("Saving CV before download:", data);
-            await cvService.updateCV(id, data);
-            // Update local state with latest data
-            setCurrentFormData(data);
-            // Open modal instead of navigating
-            setTemplateModalOpen(true);
-        } catch (error: any) {
-            console.error("Failed to update CV", error);
-            if (error.response && error.response.status === 401) {
-                alert("Your session has expired. Please log in again.");
-                navigate('/login', { state: { from: location } });
-            } else {
-                alert("Failed to save CV. Please try again.");
-            }
-        }
+    const handleEditDownload = async (data: CreateCVInput) => {
+        navigate('/dashboard', { state: { openDownloadModal: true } })
     };
 
     const handlePatch = async (section: keyof CreateCVInput, data: Partial<CreateCVInput>) => {
@@ -272,7 +256,7 @@ export const EditCVPage = () => {
                 {initialData && (
                     <CVBuilderForm
                         initialData={initialData}
-                        onSubmit={handleEditSubmit}
+                        onSubmit={handleEditDownload}
                         onPatch={handlePatch}
                         submitLabel="Download CV"
                         submitIcon={Download}
