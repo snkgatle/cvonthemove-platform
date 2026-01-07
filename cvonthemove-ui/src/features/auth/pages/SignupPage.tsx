@@ -123,6 +123,32 @@ const SignupPage: React.FC = () => {
                             )}
                         </div>
 
+                        <div className="flex items-start">
+                            <div className="flex items-center h-5">
+                                <input
+                                    id="terms"
+                                    type="checkbox"
+                                    className={`focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded bg-white/5 border ${errors.termsAccepted ? 'border-red-500/50' : 'border-white/10'}`}
+                                    {...register('termsAccepted')}
+                                />
+                            </div>
+                            <div className="ml-3 text-sm">
+                                <label htmlFor="terms" className="font-medium text-slate-300">
+                                    I agree to the{' '}
+                                    <span onClick={() => navigate('/terms')} className="text-blue-400 hover:text-blue-300 cursor-pointer">
+                                        Terms of Service
+                                    </span>{' '}
+                                    and{' '}
+                                    <span onClick={() => navigate('/privacy')} className="text-blue-400 hover:text-blue-300 cursor-pointer">
+                                        Privacy Policy (POPIA)
+                                    </span>
+                                </label>
+                                {errors.termsAccepted && (
+                                    <p className="mt-1 text-sm text-red-400">{errors.termsAccepted.message}</p>
+                                )}
+                            </div>
+                        </div>
+
                         <motion.button
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
