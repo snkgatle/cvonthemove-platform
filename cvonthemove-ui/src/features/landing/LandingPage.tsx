@@ -6,6 +6,7 @@ import logo from '../../assets/white.svg';
 import { AIAgentModal } from '../cv-builder/components/AIAgent/AIAgentModal';
 import { cvService } from '../cv-builder/services/cvService';
 import { type CreateCVInput } from '../cv-builder/types';
+import Footer from '../../components/Footer';
 
 const LandingPage: React.FC = () => {
     const navigate = useNavigate();
@@ -56,55 +57,59 @@ const LandingPage: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex flex-col items-center justify-center p-6 text-white overflow-hidden relative">
+        <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex flex-col pt-6 text-white overflow-hidden relative">
             <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div> {/* Optional generic grid suggestion */}
 
-            <motion.div
-                variants={containerVariants}
-                initial="hidden"
-                animate="visible"
-                className="z-10 flex flex-col items-center max-w-4xl w-full"
-            >
-                <motion.div variants={itemVariants} className="mb-8 p-4 bg-white/5 rounded-full backdrop-blur-sm border border-white/10">
-                    <img src={logo} alt="CV On The Move" className="h-16 w-auto" />
+            <div className="flex-grow flex flex-col items-center justify-center p-6">
+                <motion.div
+                    variants={containerVariants}
+                    initial="hidden"
+                    animate="visible"
+                    className="z-10 flex flex-col items-center max-w-4xl w-full"
+                >
+                    <motion.div variants={itemVariants} className="mb-8 p-4 bg-white/5 rounded-full backdrop-blur-sm border border-white/10">
+                        <img src={logo} alt="CV On The Move" className="h-16 w-auto" />
+                    </motion.div>
+
+                    <motion.h1 variants={itemVariants} className="text-5xl md:text-7xl font-bold text-center mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400">
+                        CV On The Move
+                    </motion.h1>
+
+                    <motion.p variants={itemVariants} className="text-xl text-slate-300 text-center mb-12 max-w-2xl">
+                        Create, edit, and download professional resumes in minutes.
+                        Your career journey starts here.
+                    </motion.p>
+
+                    <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
+                        <Card
+                            icon={<Plus className="w-8 h-8 text-blue-400" />}
+                            title="Create CV"
+                            description="Start from scratch with our easy-to-use wizard."
+                            onClick={() => navigate('/create')}
+                        />
+                        <Card
+                            icon={<Bot className="w-8 h-8 text-indigo-400" />}
+                            title="Use AI"
+                            description="Let our AI agent help you build your CV."
+                            onClick={() => setIsAgentOpen(true)}
+                        />
+                        <Card
+                            icon={<Edit3 className="w-8 h-8 text-emerald-400" />}
+                            title="Edit CV"
+                            description="Update your existing CV with new achievements."
+                            onClick={() => navigate('/dashboard')}
+                        />
+                        <Card
+                            icon={<Download className="w-8 h-8 text-purple-400" />}
+                            title="Download"
+                            description="Get your CV in PDF format instantly."
+                            onClick={() => navigate('/download')}
+                        />
+                    </motion.div>
                 </motion.div>
+            </div>
 
-                <motion.h1 variants={itemVariants} className="text-5xl md:text-7xl font-bold text-center mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400">
-                    CV On The Move
-                </motion.h1>
-
-                <motion.p variants={itemVariants} className="text-xl text-slate-300 text-center mb-12 max-w-2xl">
-                    Create, edit, and download professional resumes in minutes.
-                    Your career journey starts here.
-                </motion.p>
-
-                <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
-                    <Card
-                        icon={<Plus className="w-8 h-8 text-blue-400" />}
-                        title="Create CV"
-                        description="Start from scratch with our easy-to-use wizard."
-                        onClick={() => navigate('/create')}
-                    />
-                    <Card
-                        icon={<Bot className="w-8 h-8 text-indigo-400" />}
-                        title="Use AI"
-                        description="Let our AI agent help you build your CV."
-                        onClick={() => setIsAgentOpen(true)}
-                    />
-                    <Card
-                        icon={<Edit3 className="w-8 h-8 text-emerald-400" />}
-                        title="Edit CV"
-                        description="Update your existing CV with new achievements."
-                        onClick={() => navigate('/dashboard')}
-                    />
-                    <Card
-                        icon={<Download className="w-8 h-8 text-purple-400" />}
-                        title="Download"
-                        description="Get your CV in PDF format instantly."
-                        onClick={() => navigate('/download')}
-                    />
-                </motion.div>
-            </motion.div>
+            <Footer />
 
             <AIAgentModal
                 isOpen={isAgentOpen}

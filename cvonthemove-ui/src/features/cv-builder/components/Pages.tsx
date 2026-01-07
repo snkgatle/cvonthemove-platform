@@ -74,8 +74,9 @@ export const CreateCVPage = () => {
     return (
         <div className="p-4 md:p-8 bg-slate-900 min-h-screen">
             {isDownloading && <Preloader />}
+            <DashboardHeader showAccountInfo={false} />
             {/* Progress Indicator */}
-            <div className="max-w-4xl mx-auto mb-8">
+            <div className="max-w-4xl mx-auto mb-8 mt-8">
                 <div className="flex items-center justify-between relative">
                     <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-white/10 -z-10"></div>
                     <div className={`flex flex-col items-center gap-2 ${step >= 1 ? 'text-blue-400' : 'text-slate-600'}`}>
@@ -263,44 +264,47 @@ export const EditCVPage = () => {
     }
 
     return (
-        <div className="p-8 bg-slate-900 min-h-screen">
-            {isDownloading && <Preloader />}
-            <h1 className="text-center text-white mb-8 text-3xl font-bold">Edit CV</h1>
-            {initialData && (
-                <CVBuilderForm
-                    initialData={initialData}
-                    onSubmit={handleEditSubmit}
-                    onPatch={handlePatch}
-                    submitLabel="Download CV"
-                    submitIcon={Download}
-                />
-            )}
-
-            <Modal
-                isOpen={isTemplateModalOpen}
-                onClose={() => setTemplateModalOpen(false)}
-                title="Select Template & Download"
-                footer={(
-                    <div className="flex justify-end">
-                        <button
-                            onClick={handleDownload}
-                            disabled={isDownloading}
-                            className="btn-primary flex items-center gap-2 px-8 py-3"
-                        >
-                            <Download size={20} />
-                            Download PDF
-                        </button>
-                    </div>
-                )}
-            >
-                <div className="flex flex-col gap-6">
-                    <p className="text-slate-300">Choose a template for your CV:</p>
-                    <TemplateSelector
-                        selectedTemplate={selectedTemplate}
-                        onSelect={setSelectedTemplate}
+        <div className='min-h-screen bg-slate-900'>
+            <DashboardHeader logoNavUrl="/dashboard" />
+            <div className="p-8 bg-slate-900 min-h-screen">
+                {isDownloading && <Preloader />}
+                <h1 className="text-center text-white mb-8 text-3xl font-bold">Edit CV</h1>
+                {initialData && (
+                    <CVBuilderForm
+                        initialData={initialData}
+                        onSubmit={handleEditSubmit}
+                        onPatch={handlePatch}
+                        submitLabel="Download CV"
+                        submitIcon={Download}
                     />
-                </div>
-            </Modal>
+                )}
+
+                <Modal
+                    isOpen={isTemplateModalOpen}
+                    onClose={() => setTemplateModalOpen(false)}
+                    title="Select Template & Download"
+                    footer={(
+                        <div className="flex justify-end">
+                            <button
+                                onClick={handleDownload}
+                                disabled={isDownloading}
+                                className="btn-primary flex items-center gap-2 px-8 py-3"
+                            >
+                                <Download size={20} />
+                                Download PDF
+                            </button>
+                        </div>
+                    )}
+                >
+                    <div className="flex flex-col gap-6">
+                        <p className="text-slate-300">Choose a template for your CV:</p>
+                        <TemplateSelector
+                            selectedTemplate={selectedTemplate}
+                            onSelect={setSelectedTemplate}
+                        />
+                    </div>
+                </Modal>
+            </div>
         </div>
     );
 };

@@ -243,6 +243,9 @@ export class CVBuilderService {
                     references: true,
                 },
             });
+        }, {
+            maxWait: 5000, // Wait up to 5s for a connection (default 2s)
+            timeout: 10000 // Allow transaction to run for 10s (default 5s)
         });
     }
 }
