@@ -57,7 +57,7 @@ const SignupPage: React.FC = () => {
                 <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl shadow-xl p-8">
                     <div className="text-center mb-8">
                         <div className="mx-auto h-16 w-16 bg-white/5 rounded-full flex items-center justify-center mb-4 border border-white/10">
-                            <img src={logo} alt="CV On The Move" className="h-10 w-auto" />
+                            <img src={logo} alt="CV On The Move" className="h-10 w-auto cursor-pointer" onClick={() => navigate('/')} />
                         </div>
                         <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400">
                             Create Account
@@ -121,6 +121,32 @@ const SignupPage: React.FC = () => {
                             {errors.password && (
                                 <p className="mt-1 text-sm text-red-400">{errors.password.message}</p>
                             )}
+                        </div>
+
+                        <div className="flex items-start">
+                            <div className="flex items-center h-5">
+                                <input
+                                    id="terms"
+                                    type="checkbox"
+                                    className={`focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded bg-white/5 border ${errors.termsAccepted ? 'border-red-500/50' : 'border-white/10'}`}
+                                    {...register('termsAccepted')}
+                                />
+                            </div>
+                            <div className="ml-3 text-sm">
+                                <label htmlFor="terms" className="font-medium text-slate-300">
+                                    I agree to the{' '}
+                                    <span onClick={() => navigate('/terms')} className="text-blue-400 hover:text-blue-300 cursor-pointer">
+                                        Terms of Service
+                                    </span>{' '}
+                                    and{' '}
+                                    <span onClick={() => navigate('/privacy')} className="text-blue-400 hover:text-blue-300 cursor-pointer">
+                                        Privacy Policy (POPIA)
+                                    </span>
+                                </label>
+                                {errors.termsAccepted && (
+                                    <p className="mt-1 text-sm text-red-400">{errors.termsAccepted.message}</p>
+                                )}
+                            </div>
                         </div>
 
                         <motion.button

@@ -46,7 +46,7 @@ const LoginPage: React.FC = () => {
                 <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl shadow-xl p-8">
                     <div className="text-center mb-8">
                         <div className="mx-auto h-16 w-16 bg-white/5 rounded-full flex items-center justify-center mb-4 border border-white/10">
-                            <img src={logo} alt="CV On The Move" className="h-10 w-auto" />
+                            <img src={logo} alt="CV On The Move" className="h-10 w-auto cursor-pointer" onClick={() => navigate('/')} />
                         </div>
                         <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400">
                             Welcome Back

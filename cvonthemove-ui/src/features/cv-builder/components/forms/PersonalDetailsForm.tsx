@@ -62,7 +62,7 @@ export const PersonalDetailsForm: React.FC = () => {
                     <label>ID Number</label>
                     <input
                         {...register("personalDetails.idNumber")}
-                        placeholder="Optional"
+                        placeholder="Required"
                         className={errors.personalDetails?.idNumber ? "input-error" : ""}
                     />
                 </div>

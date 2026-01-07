@@ -12,6 +12,10 @@ export interface LoginResponse {
     // Add other fields if returned by the backend (e.g., user details)
 }
 
-export const RegisterSchema = LoginSchema;
+export const RegisterSchema = LoginSchema.extend({
+    termsAccepted: z.boolean().refine(val => val === true, {
+        message: 'You must accept the Terms and Privacy Policy',
+    }),
+});
 export type RegisterInput = z.infer<typeof RegisterSchema>;
 

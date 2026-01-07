@@ -40,7 +40,7 @@ export const DashboardPage = () => {
     if (!cv) {
         return (
             <div className="min-h-screen bg-slate-900">
-                <DashboardHeader />
+                <DashboardHeader logoNavUrl="/" />
                 <div className="p-8 text-white text-center">
                     <h1 className="text-3xl font-bold mb-4">No CV Found</h1>
                     <p className="mb-8">You haven't created a CV yet. Let's get started!</p>
@@ -54,7 +54,7 @@ export const DashboardPage = () => {
 
     return (
         <div className="min-h-screen bg-slate-900">
-            <DashboardHeader />
+            <DashboardHeader logoNavUrl="/" />
             <div className="p-8">
                 <h1 className="text-center text-white mb-8 text-3xl font-bold">Edit Your CV</h1>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">

@@ -19,16 +19,18 @@ interface CVBuilderFormProps {
     submitIcon?: LucideIcon;
 }
 
-const SectionWrapper = ({ title, children, onSave, isSaving }: { title: string, children: React.ReactNode, onSave: () => void, isSaving: boolean }) => (
+const SectionWrapper = ({ title, children, onSave, isSaving, showSaveButton }: { title: string, children: React.ReactNode, onSave: () => void, isSaving: boolean, showSaveButton: boolean }) => (
     <div className="bg-slate-800 p-6 rounded-lg mb-6 border border-white/5 relative group">
         <h2 className="text-xl font-bold text-white mb-4">{title}</h2>
         {children}
-        <div className="mt-4 flex justify-end">
-            <button type="button" onClick={onSave} disabled={isSaving} className="btn-primary-sm bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded text-sm disabled:opacity-50 flex items-center gap-2">
-                <Save size={14} />
-                {isSaving ? 'Saving...' : `Save ${title}`}
-            </button>
-        </div>
+        {showSaveButton && (
+            <div className="mt-4 flex justify-end">
+                <button type="button" onClick={onSave} disabled={isSaving} className="btn-primary-sm bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded text-sm disabled:opacity-50 flex items-center gap-2">
+                    <Save size={14} />
+                    {isSaving ? 'Saving...' : `Save ${title}`}
+                </button>
+            </div>
+        )}
     </div>
 );
 
@@ -119,32 +121,32 @@ export const CVBuilderForm: React.FC<CVBuilderFormProps> = ({
                 </div>
 
                 <div id="personalDetails">
-                    <SectionWrapper title="Personal Details" onSave={() => handleSectionSave('personalDetails')} isSaving={savingSection === 'personalDetails'}>
+                    <SectionWrapper title="Personal Details" onSave={() => handleSectionSave('personalDetails')} isSaving={savingSection === 'personalDetails'} showSaveButton={!!onPatch}>
                         <PersonalDetailsForm />
                     </SectionWrapper>
                 </div>
                 <div id="addresses">
-                    <SectionWrapper title="Addresses" onSave={() => handleSectionSave('addresses')} isSaving={savingSection === 'addresses'}>
+                    <SectionWrapper title="Addresses" onSave={() => handleSectionSave('addresses')} isSaving={savingSection === 'addresses'} showSaveButton={!!onPatch}>
                         <AddressForm />
                     </SectionWrapper>
                 </div>
                 <div id="educations">
-                    <SectionWrapper title="Education" onSave={() => handleSectionSave('educations')} isSaving={savingSection === 'educations'}>
+                    <SectionWrapper title="Education" onSave={() => handleSectionSave('educations')} isSaving={savingSection === 'educations'} showSaveButton={!!onPatch}>
                         <EducationForm />
                     </SectionWrapper>
                 </div>
                 <div id="workExperiences">
-                    <SectionWrapper title="Work Experience" onSave={() => handleSectionSave('workExperiences')} isSaving={savingSection === 'workExperiences'}>
+                    <SectionWrapper title="Work Experience" onSave={() => handleSectionSave('workExperiences')} isSaving={savingSection === 'workExperiences'} showSaveButton={!!onPatch}>
                         <WorkExperienceForm />
                     </SectionWrapper>
                 </div>
                 <div id="skills">
-                    <SectionWrapper title="Skills" onSave={() => handleSectionSave('skills')} isSaving={savingSection === 'skills'}>
+                    <SectionWrapper title="Skills" onSave={() => handleSectionSave('skills')} isSaving={savingSection === 'skills'} showSaveButton={!!onPatch}>
                         <SkillsForm />
                     </SectionWrapper>
                 </div>
                 <div id="references">
-                    <SectionWrapper title="References" onSave={() => handleSectionSave('references')} isSaving={savingSection === 'references'}>
+                    <SectionWrapper title="References" onSave={() => handleSectionSave('references')} isSaving={savingSection === 'references'} showSaveButton={!!onPatch}>
                         <ReferencesForm />
                     </SectionWrapper>
                 </div>
