@@ -196,7 +196,7 @@ export const EditCVPage = () => {
     }, [loading, section]);
 
     const handleEditDownload = async (data: CreateCVInput) => {
-        navigate('/dashboard', { state: { openDownloadModal: true } })
+        navigate('/dashboard', { state: { openDownloadModal: true, data } })
     };
 
     const handlePatch = async (section: keyof CreateCVInput, data: Partial<CreateCVInput>) => {
