@@ -59,9 +59,15 @@ jobs:
           flags: '--service-account=${{ env.SERVICE_ACCOUNT_EMAIL }} --allow-unauthenticated --memory 1024Mi'
           env_vars: |
              NODE_ENV=production
+             SMTP_HOST=${{ secrets.SMTP_HOST }}
+             SMTP_PORT=${{ secrets.SMTP_PORT }}
+             SMTP_USER=${{ secrets.SMTP_USER }}
+             SMTP_PASSWORD=${{ secrets.SMTP_PASSWORD }}
+             EMAIL_FROM=${{ secrets.EMAIL_FROM }}
           secrets: |
              DATABASE_URL=DATABASE_URL:latest
              JWT_SECRET=JWT_SECRET:latest
+
 
       - name: Show Output
         run: echo ${{ steps.deploy.outputs.url }}
