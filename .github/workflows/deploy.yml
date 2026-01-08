@@ -11,12 +11,6 @@ env:
   SERVICE_NAME: cvonthemove-api
   SERVICE_ACCOUNT_EMAIL: kempire-cv-api@cvonthemove-52aec.iam.gserviceaccount.com
   VITE_API_URL: https://cvonthemove-api-453787076045.us-central1.run.app
-  EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
-  SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
-  SMTP_USER: ${{ secrets.SMTP_USER }}
-  SMTP_HOST: ${{ secrets.SMTP_HOST }}
-  SMTP_PORT: ${{ secrets.SMTP_PORT }}
-  JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
 jobs:
   deploy:
@@ -62,6 +56,12 @@ jobs:
           secrets: |
              DATABASE_URL=DATABASE_URL:latest
              JWT_SECRET=JWT_SECRET:latest
+             SMTP_HOST=SMTP_HOST:latest
+             SMTP_PORT=SMTP_PORT:latest
+             SMTP_USER=SMTP_USER:latest
+             SMTP_PASSWORD=SMTP_PASSWORD:latest
+             EMAIL_FROM=EMAIL_FROM:latest
+
 
       - name: Show Output
         run: echo ${{ steps.deploy.outputs.url }}

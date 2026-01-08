@@ -27,6 +27,7 @@ export class AuthService {
             data: {
                 email: data.email,
                 password: hashedPassword,
+                termsAccepted: data.termsAccepted,
             },
         });
 
