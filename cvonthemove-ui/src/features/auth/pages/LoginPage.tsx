@@ -23,8 +23,16 @@ const LoginPage: React.FC = () => {
             setError(null);
             const response = await authService.login(data);
             localStorage.setItem('token', response.token);
-            const redirectPath = from || '/dashboard';
-            navigate(redirectPath, { replace: true });
+
+            if (location.state?.action === 'download') {
+                navigate('/dashboard', {
+                    replace: true,
+                    state: { openDownloadModal: true }
+                });
+            } else {
+                const redirectPath = from || '/dashboard';
+                navigate(redirectPath, { replace: true });
+            }
         } catch (err: unknown) {
             console.error('Login failed', err);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any

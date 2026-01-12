@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { cvService } from '../services/cvService';
 import { type CV } from '../types';
 import Preloader from '../../../components/Preloader';
+import { DownloadModal } from './DownloadModal';
 
 import { DashboardHeader } from './DashboardHeader';
 
@@ -10,12 +11,34 @@ export const DashboardPage = () => {
     // ... state and effects remain the same ...
     const [cv, setCv] = useState<CV | null>(null);
     const [loading, setLoading] = useState(true);
+    const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
+    const [isDownloading, setIsDownloading] = useState(false);
+
     const navigate = useNavigate();
+    const location = useLocation();
+
+    useEffect(() => {
+        // Check for download intent from redirection
+        if (location.state?.openDownloadModal) {
+            setIsDownloadModalOpen(true);
+            // Clear state to prevent reopening on refresh
+            window.history.replaceState({}, document.title);
+        }
+    }, [location.state]);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (!token) {
-            navigate('/login');
+            const state = location.state?.openDownloadModal
+                ? { from: '/dashboard', action: 'download' }
+                : { from: '/dashboard' }; // Or default behavior
+
+            // Prefer signup as per user request for download flow
+            if (location.state?.openDownloadModal) {
+                navigate('/signup', { state });
+            } else {
+                navigate('/login');
+            }
             return;
         }
 
@@ -32,6 +55,35 @@ export const DashboardPage = () => {
 
         fetchCv();
     }, [navigate]);
+
+    const handleDownloadClick = () => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            navigate('/signup', {
+                state: {
+                    from: '/dashboard',
+                    action: 'download'
+                }
+            });
+            return;
+        }
+        setIsDownloadModalOpen(true);
+    };
+
+    const handleDownloadConfirm = async (templateId: string) => {
+        if (!cv) return;
+
+        setIsDownloading(true);
+        try {
+            await cvService.downloadCV(cv, templateId);
+            setIsDownloadModalOpen(false);
+        } catch (error) {
+            console.error('Download failed:', error);
+            // Optionally show error toast here
+        } finally {
+            setIsDownloading(false);
+        }
+    };
 
     if (loading) {
         return <Preloader />;
@@ -88,8 +140,28 @@ export const DashboardPage = () => {
                         description="Update your references."
                         link={`/edit/${cv.id}?section=references`}
                     />
+
+                    <div
+                        className="bg-slate-800 p-6 rounded-lg cursor-pointer hover:bg-slate-700 transition-colors border border-blue-500/30 hover:border-blue-500/60"
+                        onClick={handleDownloadClick}
+                    >
+                        <h2 className="text-white text-xl font-bold flex items-center gap-2">
+                            Download CV
+                        </h2>
+                        <p className="text-slate-400 mt-2">Generate a PDF of your CV.</p>
+                        <div className="mt-4 text-blue-500 hover:text-blue-400">
+                            Download PDF &rarr;
+                        </div>
+                    </div>
                 </div>
             </div>
+
+            <DownloadModal
+                isOpen={isDownloadModalOpen}
+                onClose={() => setIsDownloadModalOpen(false)}
+                onDownload={handleDownloadConfirm}
+                isDownloading={isDownloading}
+            />
         </div>
     );
 };
