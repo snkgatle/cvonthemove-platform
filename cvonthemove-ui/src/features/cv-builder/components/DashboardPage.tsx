@@ -3,7 +3,9 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { cvService } from '../services/cvService';
 import { type CV } from '../types';
 import Preloader from '../../../components/Preloader';
+import { Modal } from '../../../components/Modal';
 import { DownloadModal } from './DownloadModal';
+import { ShareQR } from './ShareQR';
 
 import { DashboardHeader } from './DashboardHeader';
 
@@ -12,6 +14,7 @@ export const DashboardPage = () => {
     const [cv, setCv] = useState<CV | null>(null);
     const [loading, setLoading] = useState(true);
     const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
+    const [isShareModalOpen, setIsShareModalOpen] = useState(false);
     const [isDownloading, setIsDownloading] = useState(false);
 
     const navigate = useNavigate();
@@ -68,6 +71,10 @@ export const DashboardPage = () => {
             return;
         }
         setIsDownloadModalOpen(true);
+    };
+
+    const handleShareClick = () => {
+        setIsShareModalOpen(true);
     };
 
     const handleDownloadConfirm = async (templateId: string) => {
@@ -153,6 +160,19 @@ export const DashboardPage = () => {
                             Download PDF &rarr;
                         </div>
                     </div>
+
+                    <div
+                        className="bg-slate-800 p-6 rounded-lg cursor-pointer hover:bg-slate-700 transition-colors border border-purple-500/30 hover:border-purple-500/60"
+                        onClick={handleShareClick}
+                    >
+                        <h2 className="text-white text-xl font-bold flex items-center gap-2">
+                            Share CV
+                        </h2>
+                        <p className="text-slate-400 mt-2">Share your CV via QR Code.</p>
+                        <div className="mt-4 text-purple-500 hover:text-purple-400">
+                            View QR Code &rarr;
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -162,6 +182,19 @@ export const DashboardPage = () => {
                 onDownload={handleDownloadConfirm}
                 isDownloading={isDownloading}
             />
+
+            <Modal
+                isOpen={isShareModalOpen}
+                onClose={() => setIsShareModalOpen(false)}
+                title="Share Your CV"
+            >
+                {cv && (
+                    <ShareQR
+                        url={`${window.location.origin}/cv-builder/${cv.id}`}
+                        description="Employers can scan this code to view your digital CV."
+                    />
+                )}
+            </Modal>
         </div>
     );
 };
