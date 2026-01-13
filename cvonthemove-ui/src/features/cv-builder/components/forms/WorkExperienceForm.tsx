@@ -1,15 +1,47 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useFormContext, useFieldArray, useFormState } from 'react-hook-form';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, Sparkles } from 'lucide-react';
 import type { CreateCVFormInput } from '../../types';
+import { AIEnhancerModal } from '../AIEnhancerModal';
 
 export const WorkExperienceForm: React.FC = () => {
-    const { register, control } = useFormContext<CreateCVFormInput>();
+    const { register, control, setValue, getValues } = useFormContext<CreateCVFormInput>();
     const { errors } = useFormState({ control });
     const { fields, append, remove } = useFieldArray({
         control,
         name: "workExperiences",
     });
+
+    const [modalState, setModalState] = useState<{ isOpen: boolean; index: number | null }>({
+        isOpen: false,
+        index: null,
+    });
+
+    const openEnhancer = (index: number) => {
+        setModalState({ isOpen: true, index });
+    };
+
+    const closeEnhancer = () => {
+        setModalState({ isOpen: false, index: null });
+    };
+
+    const handleSelectSuggestion = (suggestion: string) => {
+        if (modalState.index !== null) {
+            const currentDescription = getValues(`workExperiences.${modalState.index}.description`);
+            // Append or replace? Let's append for now or just replace if empty.
+            // The user might want to replace a specific bullet point.
+            // But since the modal takes the text, usually it replaces the text or appends.
+            // The prompt says "Jules will suggest 3 professional alternatives".
+            // Let's replace the content in the modal input but here we update the form field.
+            // If the user wants to *enhance* "I sold cars", they probably want the enhanced version.
+
+            // To be safe, maybe we should append if there is already text and it's different?
+            // Or replace?
+            // Let's just set the value. The user can edit it later.
+            setValue(`workExperiences.${modalState.index}.description`, suggestion, { shouldDirty: true });
+            closeEnhancer();
+        }
+    };
 
     return (
         <div className="form-section">
@@ -64,7 +96,16 @@ export const WorkExperienceForm: React.FC = () => {
                         </div>
                     </div>
                     <div className="form-group">
-                        <label>Description</label>
+                        <div className="flex justify-between items-center mb-1">
+                            <label>Description</label>
+                            <button
+                                type="button"
+                                onClick={() => openEnhancer(index)}
+                                className="text-xs flex items-center gap-1 text-blue-600 hover:text-blue-800"
+                            >
+                                <Sparkles size={12} /> Enhance with AI
+                            </button>
+                        </div>
                         <textarea
                             {...register(`workExperiences.${index}.description`)}
                             rows={4}
@@ -82,6 +123,15 @@ export const WorkExperienceForm: React.FC = () => {
             >
                 <Plus size={16}/> Add Experience
             </button>
+
+            {modalState.isOpen && modalState.index !== null && (
+                <AIEnhancerModal
+                    isOpen={modalState.isOpen}
+                    onClose={closeEnhancer}
+                    initialText={getValues(`workExperiences.${modalState.index}.description`) || ''}
+                    onSelect={handleSelectSuggestion}
+                />
+            )}
         </div>
     );
 };
