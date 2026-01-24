@@ -6,11 +6,13 @@ handlers:
   # Serve static assets
   - url: /assets
     static_dir: dist/assets
+    secure: always
 
   # Catch-all for SPA: serve index.html
   - url: .*
     static_files: dist/index.html
     upload: dist/index.html
+    secure: always
 
 automatic_scaling:
   max_instances: 5
