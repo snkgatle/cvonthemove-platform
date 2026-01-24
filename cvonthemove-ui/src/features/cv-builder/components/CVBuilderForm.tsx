@@ -46,6 +46,11 @@ interface CVBuilderFormProps {
     submitIcon?: LucideIcon;
 }
 
+const formatDateForInput = (dateString: string | null | undefined) => {
+    if (!dateString) return '';
+    return dateString.split('T')[0];
+};
+
 export const CVBuilderForm: React.FC<CVBuilderFormProps> = ({
     initialData,
     onSubmit,
@@ -74,8 +79,18 @@ export const CVBuilderForm: React.FC<CVBuilderFormProps> = ({
         ...initialData,
         personalDetails: initialData.personalDetails ? {
             ...initialData.personalDetails,
-            languages: initialData.personalDetails.languages ? initialData.personalDetails.languages.map((l: string) => ({ value: l })) : []
-        } : defaultPersonalDetails
+            languages: initialData.personalDetails.languages ? initialData.personalDetails.languages.map(l => ({ value: l })) : []
+        } : defaultPersonalDetails,
+        educations: initialData.educations ? initialData.educations.map(edu => ({
+            ...edu,
+            startDate: formatDateForInput(edu.startDate),
+            endDate: formatDateForInput(edu.endDate),
+        })) : [],
+        workExperiences: initialData.workExperiences ? initialData.workExperiences.map(work => ({
+            ...work,
+            startDate: formatDateForInput(work.startDate),
+            endDate: formatDateForInput(work.endDate),
+        })) : [],
     } : {
         personalDetails: defaultPersonalDetails,
         addresses: [],
