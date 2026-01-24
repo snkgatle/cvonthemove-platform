@@ -20,6 +20,7 @@ import { WorkExperienceController } from '../controllers/WorkExperienceControlle
 import { SkillController } from '../controllers/SkillController';
 import { ReferenceController } from '../controllers/ReferenceController';
 import { generatePdfController } from '../controllers/pdf.controller';
+import { AISuggestionController } from '../controllers/AISuggestionController';
 
 const router = express.Router();
 
@@ -599,6 +600,24 @@ router.post('/references', validate(ReferenceSchema), ReferenceController.add);
  */
 router.put('/references/:id', authenticate, ReferenceController.update);
 router.delete('/references/:id', authenticate, ReferenceController.delete);
+
+/**
+ * @openapi
+ * /ai/suggest-summary:
+ *   post:
+ *     summary: Suggest a professional summary
+ *     tags: [AI]
+ */
+router.post('/ai/suggest-summary', authenticate, AISuggestionController.suggestSummary);
+
+/**
+ * @openapi
+ * /ai/suggest-work-description:
+ *   post:
+ *     summary: Suggest a work experience description
+ *     tags: [AI]
+ */
+router.post('/ai/suggest-work-description', authenticate, AISuggestionController.suggestWorkDescription);
 
 
 export default router;
