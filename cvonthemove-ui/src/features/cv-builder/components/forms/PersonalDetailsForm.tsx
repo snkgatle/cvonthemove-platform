@@ -1,17 +1,62 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { useFormContext, useFieldArray, useFormState } from 'react-hook-form';
 import { Plus, Trash2 } from 'lucide-react';
 import type { CreateCVFormInput } from '../../types';
+import { MagicWriteButton } from '../MagicWriteButton';
+import { aiService } from '../../services/aiService';
 
 export const PersonalDetailsForm: React.FC = () => {
-    const { register, control } = useFormContext<CreateCVFormInput>();
+    const { register, control, setValue, getValues } = useFormContext<CreateCVFormInput>();
     const { errors } = useFormState({ control });
+    const [isSuggesting, setIsSuggesting] = useState(false);
+    const [previousSummary, setPreviousSummary] = useState<string>("");
+    const [hasSuggestion, setHasSuggestion] = useState(false);
+
+    const typingIntervalRef = useRef<any>(null);
 
     // Manage languages as a field array of objects { value: string }
     const { fields, append, remove } = useFieldArray({
         control,
         name: "personalDetails.languages",
     });
+
+    const fetchAISuggestion = async () => {
+        const values = getValues();
+        const { fullName } = values.personalDetails;
+        const skills = values.skills?.map(s => s.name) || [];
+        const experiences = values.workExperiences || [];
+
+        setIsSuggesting(true);
+        try {
+            const suggestion = await aiService.suggestSummary(fullName, skills, experiences);
+            setPreviousSummary(getValues("personalDetails.summary") || "");
+
+            // Typing effect
+            let i = 0;
+            setValue("personalDetails.summary", ""); // Clear current
+            if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
+
+            typingIntervalRef.current = setInterval(() => {
+                if (i < suggestion.length) {
+                    const currentText = getValues("personalDetails.summary") || "";
+                    setValue("personalDetails.summary", currentText + suggestion[i]);
+                    i++;
+                } else {
+                    if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
+                    setHasSuggestion(true);
+                }
+            }, 20);
+        } catch (error) {
+            console.error("Failed to fetch AI suggestion", error);
+        } finally {
+            setIsSuggesting(false);
+        }
+    };
+
+    const handleUndo = () => {
+        setValue("personalDetails.summary", previousSummary);
+        setHasSuggestion(false);
+    };
 
     return (
         <div className="form-section">
@@ -83,7 +128,15 @@ export const PersonalDetailsForm: React.FC = () => {
             </div>
 
             <div className="form-group">
-                <label>Summary</label>
+                <div className="flex justify-between items-center mb-2">
+                    <label className="mb-0">Summary</label>
+                    <MagicWriteButton
+                        onClick={fetchAISuggestion}
+                        isLoading={isSuggesting}
+                        hasSuggestion={hasSuggestion}
+                        onUndo={handleUndo}
+                    />
+                </div>
                 <textarea
                     {...register("personalDetails.summary")}
                     rows={4}

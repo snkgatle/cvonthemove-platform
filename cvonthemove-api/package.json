@@ -1,6 +1,6 @@
 {
   "name": "cvonthemove-api",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "start": "node dist/server.js",
@@ -12,6 +12,7 @@
     "prisma:push": "prisma db push"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@types/he": "^1.2.3",
     "@types/nodemailer": "^7.0.4",
     "bcryptjs": "^3.0.3",

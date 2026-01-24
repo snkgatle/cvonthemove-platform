@@ -6,10 +6,15 @@ import cors from 'cors';
 
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './config/swagger';
-import cvBuilderRoutes from './features/cv-builder/routes/cvBuilder.routes';
+import cvBuilderRoutes from './features/cv-builder/routes/CVBuilderRoutes';
 import authRoutes from './features/auth/routes/auth.routes';
+import fs from 'fs';
 
 const app = express();
+
+const packageJsonPath = path.join(__dirname, '../package.json');
+const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
+const version = packageJson.version;
 
 app.use(cors()); // Allow all origins for now (or configure specific origins)
 app.use(logger('dev'));
@@ -20,6 +25,9 @@ app.use(cookieParser());
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/auth', authRoutes);
+app.get('/version', (req, res) => {
+    res.json({ version });
+});
 app.use('/', cvBuilderRoutes); // Mounted at root as per request requirements
 
 export default app;

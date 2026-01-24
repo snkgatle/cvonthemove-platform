@@ -1,0 +1,49 @@
+name: Version Bump
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  bump-version:
+    if: "!startsWith(github.event.head_commit.message, '[RELEASE]')"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Bump Version (UI)
+        working-directory: ./cvonthemove-ui
+        run: npm version patch --no-git-tag-version
+
+      - name: Bump Version (API)
+        working-directory: ./cvonthemove-api
+        run: npm version patch --no-git-tag-version
+
+      - name: Get New Version
+        id: get_version
+        working-directory: ./cvonthemove-ui
+        run: echo "VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+
+      - name: Commit and Push
+        run: |
+          VERSION=${{ steps.get_version.outputs.VERSION }}
+          git add cvonthemove-ui/package.json cvonthemove-ui/package-lock.json cvonthemove-api/package.json cvonthemove-api/package-lock.json
+          git commit -m "[RELEASE] $VERSION"
+          git tag v$VERSION
+          git push origin HEAD:main --tags
