@@ -1,25 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, lazy, Suspense } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CreateCVFormSchema, type CreateCVInput, type CreateCVFormInput } from '../types';
-import { PersonalDetailsForm } from './forms/PersonalDetailsForm';
-import { AddressForm } from './forms/AddressForm';
-import { EducationForm } from './forms/EducationForm';
-import { WorkExperienceForm } from './forms/WorkExperienceForm';
-import { SkillsForm } from './forms/SkillsForm';
-import { ReferencesForm } from './forms/ReferencesForm';
 import { Save, type LucideIcon } from 'lucide-react';
+import { Skeleton } from '../../../components/Skeleton';
 
-interface CVBuilderFormProps {
-    initialData?: CreateCVInput;
-    onSubmit: (data: CreateCVInput) => void;
-    onPatch?: (section: keyof CreateCVInput, data: Partial<CreateCVInput>) => Promise<void>;
-    isSubmitting?: boolean;
-    submitLabel?: string;
-    submitIcon?: LucideIcon;
-}
+const PersonalDetailsForm = lazy(() => import('./forms/PersonalDetailsForm').then(module => ({ default: module.PersonalDetailsForm })));
+const AddressForm = lazy(() => import('./forms/AddressForm').then(module => ({ default: module.AddressForm })));
+const EducationForm = lazy(() => import('./forms/EducationForm').then(module => ({ default: module.EducationForm })));
+const WorkExperienceForm = lazy(() => import('./forms/WorkExperienceForm').then(module => ({ default: module.WorkExperienceForm })));
+const SkillsForm = lazy(() => import('./forms/SkillsForm').then(module => ({ default: module.SkillsForm })));
+const ReferencesForm = lazy(() => import('./forms/ReferencesForm').then(module => ({ default: module.ReferencesForm })));
 
-const SectionWrapper = ({ title, children, onSave, isSaving, showSaveButton }: { title: string, children: React.ReactNode, onSave: () => void, isSaving: boolean, showSaveButton: boolean }) => (
+const FormSectionSkeleton = () => (
+    <div className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Skeleton width="100%" height={40} />
+            <Skeleton width="100%" height={40} />
+        </div>
+        <Skeleton width="100%" height={80} />
+    </div>
+);
+
+const SectionWrapper = React.memo(({ title, children, onSave, isSaving, showSaveButton }: { title: string, children: React.ReactNode, onSave: () => void, isSaving: boolean, showSaveButton: boolean }) => (
     <div className="bg-slate-800 p-6 rounded-lg mb-6 border border-white/5 relative group">
         <h2 className="text-xl font-bold text-white mb-4">{title}</h2>
         {children}
@@ -32,7 +35,16 @@ const SectionWrapper = ({ title, children, onSave, isSaving, showSaveButton }: {
             </div>
         )}
     </div>
-);
+));
+
+interface CVBuilderFormProps {
+    initialData?: CreateCVInput;
+    onSubmit: (data: CreateCVInput) => void;
+    onPatch?: (section: keyof CreateCVInput, data: Partial<CreateCVInput>) => Promise<void>;
+    isSubmitting?: boolean;
+    submitLabel?: string;
+    submitIcon?: LucideIcon;
+}
 
 export const CVBuilderForm: React.FC<CVBuilderFormProps> = ({
     initialData,
@@ -45,7 +57,7 @@ export const CVBuilderForm: React.FC<CVBuilderFormProps> = ({
     const [savingSection, setSavingSection] = useState<string | null>(null);
 
     // Transform initialData to form structure (wrap languages)
-    const defaultPersonalDetails = {
+    const defaultPersonalDetails = useMemo(() => ({
         languages: [],
         fullName: "",
         email: "",
@@ -56,13 +68,13 @@ export const CVBuilderForm: React.FC<CVBuilderFormProps> = ({
         idNumber: "",
         criminalRecord: "",
         maritalStatus: "",
-    };
+    }), []);
 
-    const formInitialValues: CreateCVFormInput = initialData ? {
+    const formInitialValues: CreateCVFormInput = useMemo(() => initialData ? {
         ...initialData,
         personalDetails: initialData.personalDetails ? {
             ...initialData.personalDetails,
-            languages: initialData.personalDetails.languages ? initialData.personalDetails.languages.map(l => ({ value: l })) : []
+            languages: initialData.personalDetails.languages ? initialData.personalDetails.languages.map((l: string) => ({ value: l })) : []
         } : defaultPersonalDetails
     } : {
         personalDetails: defaultPersonalDetails,
@@ -71,7 +83,7 @@ export const CVBuilderForm: React.FC<CVBuilderFormProps> = ({
         workExperiences: [],
         skills: [],
         references: [],
-    };
+    }, [initialData, defaultPersonalDetails]);
 
     const methods = useForm<CreateCVFormInput>({
         resolver: zodResolver(CreateCVFormSchema),
@@ -122,32 +134,44 @@ export const CVBuilderForm: React.FC<CVBuilderFormProps> = ({
 
                 <div id="personalDetails">
                     <SectionWrapper title="Personal Details" onSave={() => handleSectionSave('personalDetails')} isSaving={savingSection === 'personalDetails'} showSaveButton={!!onPatch}>
-                        <PersonalDetailsForm />
+                        <Suspense fallback={<FormSectionSkeleton />}>
+                            <PersonalDetailsForm />
+                        </Suspense>
                     </SectionWrapper>
                 </div>
                 <div id="addresses">
                     <SectionWrapper title="Addresses" onSave={() => handleSectionSave('addresses')} isSaving={savingSection === 'addresses'} showSaveButton={!!onPatch}>
-                        <AddressForm />
+                        <Suspense fallback={<FormSectionSkeleton />}>
+                            <AddressForm />
+                        </Suspense>
                     </SectionWrapper>
                 </div>
                 <div id="educations">
                     <SectionWrapper title="Education" onSave={() => handleSectionSave('educations')} isSaving={savingSection === 'educations'} showSaveButton={!!onPatch}>
-                        <EducationForm />
+                        <Suspense fallback={<FormSectionSkeleton />}>
+                            <EducationForm />
+                        </Suspense>
                     </SectionWrapper>
                 </div>
                 <div id="workExperiences">
                     <SectionWrapper title="Work Experience" onSave={() => handleSectionSave('workExperiences')} isSaving={savingSection === 'workExperiences'} showSaveButton={!!onPatch}>
-                        <WorkExperienceForm />
+                        <Suspense fallback={<FormSectionSkeleton />}>
+                            <WorkExperienceForm />
+                        </Suspense>
                     </SectionWrapper>
                 </div>
                 <div id="skills">
                     <SectionWrapper title="Skills" onSave={() => handleSectionSave('skills')} isSaving={savingSection === 'skills'} showSaveButton={!!onPatch}>
-                        <SkillsForm />
+                        <Suspense fallback={<FormSectionSkeleton />}>
+                            <SkillsForm />
+                        </Suspense>
                     </SectionWrapper>
                 </div>
                 <div id="references">
                     <SectionWrapper title="References" onSave={() => handleSectionSave('references')} isSaving={savingSection === 'references'} showSaveButton={!!onPatch}>
-                        <ReferencesForm />
+                        <Suspense fallback={<FormSectionSkeleton />}>
+                            <ReferencesForm />
+                        </Suspense>
                     </SectionWrapper>
                 </div>
 

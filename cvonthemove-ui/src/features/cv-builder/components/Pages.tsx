@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, lazy, Suspense } from 'react';
+import { AnimatePresence } from 'framer-motion';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { CVBuilderForm } from './CVBuilderForm';
-import { TemplateSelector, type TemplateId } from './TemplateSelector';
-import { CompletionStep } from './CompletionStep';
+import { type TemplateId } from './TemplateSelector';
 import { type CreateCVInput } from '../types';
 import { cvService } from '../services/cvService';
 import { ArrowRight, ArrowLeft, Download } from 'lucide-react';
@@ -10,7 +10,11 @@ import { Modal } from '../../../components/Modal';
 import '../styles/form.css';
 import Preloader from '../../../components/Preloader';
 import { DashboardHeader } from './DashboardHeader';
+import { CVBuilderSkeleton } from './CVBuilderSkeleton';
 export { DashboardPage } from './DashboardPage';
+
+const TemplateSelector = lazy(() => import('./TemplateSelector').then(module => ({ default: module.TemplateSelector })));
+const CompletionStep = lazy(() => import('./CompletionStep').then(module => ({ default: module.CompletionStep })));
 
 const CreateStep = {
     FORM: 1,
@@ -73,7 +77,9 @@ export const CreateCVPage = () => {
 
     return (
         <div className="p-4 md:p-8 bg-slate-900 min-h-screen">
-            {isDownloading && <Preloader />}
+            <AnimatePresence>
+                {isDownloading && <Preloader />}
+            </AnimatePresence>
             <DashboardHeader showAccountInfo={false} />
             {/* Progress Indicator */}
             <div className="max-w-4xl mx-auto mb-8 mt-8">
@@ -117,10 +123,12 @@ export const CreateCVPage = () => {
 
             {step === CreateStep.TEMPLATE && (
                 <div className="flex flex-col gap-8">
-                    <TemplateSelector
-                        selectedTemplate={selectedTemplate}
-                        onSelect={handleTemplateSelect}
-                    />
+                    <Suspense fallback={<Preloader />}>
+                        <TemplateSelector
+                            selectedTemplate={selectedTemplate}
+                            onSelect={handleTemplateSelect}
+                        />
+                    </Suspense>
                     <div className="flex justify-center mt-4">
                         <button
                             onClick={handleTemplateConfirm}
@@ -133,12 +141,14 @@ export const CreateCVPage = () => {
             )}
 
             {step === CreateStep.COMPLETION && (
-                <CompletionStep
-                    onDownload={handleDownload}
-                    isDownloading={isDownloading}
-                    formData={formData}
-                    templateId={selectedTemplate}
-                />
+                <Suspense fallback={<Preloader />}>
+                    <CompletionStep
+                        onDownload={handleDownload}
+                        isDownloading={isDownloading}
+                        formData={formData}
+                        templateId={selectedTemplate}
+                    />
+                </Suspense>
             )}
         </div>
     );
@@ -244,14 +254,23 @@ export const EditCVPage = () => {
     };
 
     if (loading) {
-        return <Preloader />;
+        return (
+            <div className='min-h-screen bg-slate-900'>
+                <DashboardHeader logoNavUrl="/dashboard" />
+                <div className="p-8 max-w-4xl mx-auto">
+                    <CVBuilderSkeleton />
+                </div>
+            </div>
+        );
     }
 
     return (
         <div className='min-h-screen bg-slate-900'>
             <DashboardHeader logoNavUrl="/dashboard" />
             <div className="p-8 bg-slate-900 min-h-screen">
-                {isDownloading && <Preloader />}
+                <AnimatePresence>
+                    {isDownloading && <Preloader />}
+                </AnimatePresence>
                 <h1 className="text-center text-white mb-8 text-3xl font-bold">Edit CV</h1>
                 {initialData && (
                     <CVBuilderForm
@@ -282,10 +301,12 @@ export const EditCVPage = () => {
                 >
                     <div className="flex flex-col gap-6">
                         <p className="text-slate-300">Choose a template for your CV:</p>
-                        <TemplateSelector
-                            selectedTemplate={selectedTemplate}
-                            onSelect={setSelectedTemplate}
-                        />
+                        <Suspense fallback={<Preloader />}>
+                            <TemplateSelector
+                                selectedTemplate={selectedTemplate}
+                                onSelect={setSelectedTemplate}
+                            />
+                        </Suspense>
                     </div>
                 </Modal>
             </div>
