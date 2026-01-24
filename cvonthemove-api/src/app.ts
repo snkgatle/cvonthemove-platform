@@ -6,7 +6,7 @@ import cors from 'cors';
 
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './config/swagger';
-import cvBuilderRoutes from './features/cv-builder/routes/cvBuilder.routes';
+import cvBuilderRoutes from './features/cv-builder/routes/CVBuilderRoutes';
 import authRoutes from './features/auth/routes/auth.routes';
 
 const app = express();

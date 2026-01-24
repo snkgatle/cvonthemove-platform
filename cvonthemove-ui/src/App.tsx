@@ -10,9 +10,9 @@ const AccountPage = lazy(() => import('./features/auth/pages/AccountPage').then(
 const PrivacyPolicyPage = lazy(() => import('./features/legal/PrivacyPolicyPage'));
 const TermsOfServicePage = lazy(() => import('./features/legal/TermsOfServicePage'));
 
-const CreateCVPage = lazy(() => import('./features/cv-builder/components/Pages').then(module => ({ default: module.CreateCVPage })));
-const EditCVPage = lazy(() => import('./features/cv-builder/components/Pages').then(module => ({ default: module.EditCVPage })));
-const DashboardPage = lazy(() => import('./features/cv-builder/components/Pages').then(module => ({ default: module.DashboardPage })));
+const CreateCVPage = lazy(() => import('./features/cv-builder/components/CreateCVPage').then(module => ({ default: module.CreateCVPage })));
+const EditCVPage = lazy(() => import('./features/cv-builder/components/EditCVPage').then(module => ({ default: module.EditCVPage })));
+const DashboardPage = lazy(() => import('./features/cv-builder/components/DashboardPage').then(module => ({ default: module.DashboardPage })));
 
 function App() {
   return (

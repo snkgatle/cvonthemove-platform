@@ -1,7 +1,7 @@
 import express from 'express';
 import request from 'supertest';
 import { describe, it, expect, jest } from '@jest/globals';
-import { generatePdfController } from '../controllers/pdf.controller';
+import { generatePdfController } from '../controllers/PdfController';
 import bodyParser from 'body-parser';
 
 // Mock Puppeteer
