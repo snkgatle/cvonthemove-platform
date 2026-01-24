@@ -19,7 +19,7 @@ import { EducationController } from '../controllers/EducationController';
 import { WorkExperienceController } from '../controllers/WorkExperienceController';
 import { SkillController } from '../controllers/SkillController';
 import { ReferenceController } from '../controllers/ReferenceController';
-import { generatePdfController } from '../controllers/pdf.controller';
+import { generatePdfController } from '../controllers/PdfController';
 import { AISuggestionController } from '../controllers/AISuggestionController';
 
 const router = express.Router();
