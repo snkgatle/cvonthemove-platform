@@ -15,10 +15,15 @@ const Footer = () => {
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-2 text-sm text-slate-500">
-                        <span>Made with</span>
-                        <Heart size={14} className="text-red-500 fill-red-500" />
-                        <span>by Kempire</span>
+                    <div className="flex flex-col items-center gap-1">
+                        <div className="flex items-center gap-2 text-sm text-slate-500">
+                            <span>Made with</span>
+                            <Heart size={14} className="text-red-500 fill-red-500" />
+                            <span>by Kempire</span>
+                        </div>
+                        <div className="text-xs text-slate-600">
+                            v{__APP_VERSION__}
+                        </div>
                     </div>
 
                     <div className="flex items-center gap-6">
